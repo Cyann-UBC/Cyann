@@ -18,6 +18,7 @@ db.once("open",function(){
 
 var StudentSchema = new Schema({
     "ssc" : {type:String, unique:true, required:true, trim:true},
+    "name": {type:String, required:true},
     "password"  : {type:String, required:true},
     "joined" : { type: Date, default: Date.now },
     "posts"   : [{type: mongoose.Schema.Types.ObjectId, ref: 'post'}],

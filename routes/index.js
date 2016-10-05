@@ -33,7 +33,9 @@ module.exports = function(app){
 
     var studentInfo = require('./studentInfo');
     app.get("/api/students", studentInfo.findAll);
-    app.get("/api/students/:studentId", studentInfo.findPostById)
+    app.get("/api/students/:studentId", studentInfo.findById)
+    app.get("/api/students/:studentId/posts", studentInfo.findPostById)
+    app.get("/api/students/:studentId/comments", studentInfo.findCommentById)
 
     //Save global file to file system
     //Uses multer
