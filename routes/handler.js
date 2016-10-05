@@ -1,0 +1,37 @@
+var Course  =   require("../models/mongo");
+
+exports.handleCourseId = function(req,res,next,id){
+    Course.findById(req.params.courseId,function(err,doc){
+      if(err) return next(err);
+      if(!doc){
+        err = new Error("Not Found");
+        err.status = 404;
+        return next(err);
+      }
+      console.log('as')
+      req.course = doc;
+      return next();
+    })
+};
+
+exports.handlePostId = function(req,res,next,id){
+  req.post = req.course.posts.id(id)
+  if(!req.post){
+    err = new Error("Not Found");
+    err.status = 404;
+    return next(err);
+  }
+  console.log(req.post)
+  return next();
+};
+
+exports.handleCommenId = function(req,res,next,id){
+  req.comment = req.course.posts.comments.id(id)
+  if(!req.comment){
+    err = new Error("Not Found");
+    err.status = 404;
+    return next(err);
+  }
+  //console.log(req.comment)
+  return next();
+}
