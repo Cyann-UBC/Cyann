@@ -4,6 +4,7 @@ module.exports = function(app){
     app.param('courseId', handler.handleCourseId);
     app.param('postId', handler.handlePostId);
     app.param('commentId', handler.handleCommenId);
+    app.param('studentId', handler.handleId);
 
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
@@ -27,10 +28,12 @@ module.exports = function(app){
     app.delete("/api/posts/:courseId/:postId/comments/:commentId", comments.deleteById);
 
     var studentLogin = require('./studentLogin');
-    app.get("/api/students", studentLogin.findAll);
-    app.get("/api/students/:studentSSC", studentLogin.findBySSC)
     app.post("/api/students/login", studentLogin.login);
     app.post("/api/students/register",studentLogin.signUp);
+
+    var studentInfo = require('./studentInfo');
+    app.get("/api/students", studentInfo.findAll);
+    app.get("/api/students/:studentId", studentInfo.findPostById)
 
     //Save global file to file system
     //Uses multer

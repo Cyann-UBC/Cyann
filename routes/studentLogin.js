@@ -42,27 +42,3 @@ exports.signUp = function(req,res){
     res.json({response:"field missing"})
   }
 }
-
-//find all student
-exports.findAll = function(req,res){
-  var promise = Student.find( {} );
-  promise.then(function (result){
-      res.json({ message: 'Retrieved all student!', data: result });
-  }).catch(function(err){
-      res.send(err);
-  });
-}
-
-//find post by written by a specific student
-exports.findBySSC = function(req,res){
-  var studnetSSC = req.params.studentSSC
-  var promise = Student.findOne({'ssc':studnetSSC})
-  promise.then(function(student){
-    var studentPromise = forumPosts.find({"author":student.ssc})
-    studentPromise.then(function(result){
-      res.json({ message: "Retrived post by student", data:result});
-    }).catch(function(err){
-      res.send(err)
-    })
-  })
-}

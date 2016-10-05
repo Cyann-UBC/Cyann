@@ -21,6 +21,7 @@ var StudentSchema = new Schema({
     "password"  : {type:String, required:true},
     "joined" : { type: Date, default: Date.now },
     "posts"   : [{type: mongoose.Schema.Types.ObjectId, ref: 'post'}],
+    "comments":[]
 });
 
 StudentSchema.statics.authenticate = function(ssc, password, callback){
