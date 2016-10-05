@@ -1,0 +1,78 @@
+var Course  =   require("../models/mongo");
+module.exports = function(app){
+  app.param('courseId',function(req,res,next,id){
+    Course.findById(req.params.courseId,function(err,doc){
+      if(err) return next(err);
+      if(!doc){
+        err = new Error("Not Found");
+        err.status = 404;
+        return next(err);
+      }
+      req.course = doc;
+      return next();
+    })
+  })
+
+  app.param('postId',function(req,res,next,id){
+    req.post = req.course.posts.id(id)
+    if(!req.post){
+      err = new Error("Not Found");
+      err.status = 404;
+      return next(err);
+    }
+    console.log(req.post)
+    return next();
+  })
+
+  app.param('commentId',function(req,res,next,id){
+    req.comment = req.course.posts.comments.id(id)
+    if(!req.comment){
+      err = new Error("Not Found");
+      err.status = 404;
+      return next(err);
+    }
+    //console.log(req.comment)
+    return next();
+  })
+
+    var courses = require('./courses');
+    app.get("/api/courses", courses.findAll);
+    app.get("/api/courses/:courseId", courses.findById)
+    app.post("/api/courses", courses.create);
+
+    var posts = require('./posts');
+    app.get("/api/courses/:courseId/posts", posts.findPostsByCourseId );
+    app.get("/api/courses/:courseId/posts/:postId", posts.findPostsByCourseIdAndPostId );
+    app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
+    app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsById );
+    app.delete("/api/courses/:courseId/posts/:postId", posts.deleteById );
+    app.delete("/api/courses/:courseId/posts/", posts.deleteAll );
+
+    var comments = require('./comments');
+    app.post("/api/posts/:courseId/:postId/comments", comments.create);
+    app.put("/api/posts/:courseId/:postId/comments/:commentId/upvote",comments.upvote);
+    app.put("/api/posts/:courseId/:postId/comments/:commentId/downvote",comments.downvote);
+    app.put("/api/posts/:courseId/:postId/comments/:commentId", comments.updateById);
+    app.delete("/api/posts/:courseId/:postId/comments/:commentId", comments.deleteById);
+
+    var studentLogin = require('./studentLogin');
+    app.get("/api/students", studentLogin.findAll);
+    app.get("/api/students/:studentSSC", studentLogin.findBySSC)
+    app.post("/api/students/login", studentLogin.login);
+    app.post("/api/students/register",studentLogin.signUp);
+
+    //Save global file to file system
+    //Uses multer
+    //Might be deprecated in the future
+    var fileUpload = require("./fileUpload");
+    var multer  = require('multer');
+    var upload = multer({storage: fileUpload.storage, dest: './uploads'});
+    var type = upload.single('attachment');
+    app.post("/api/:courseId/files/upload",type, fileUpload.upload);
+    app.get("/api/:courseId/files/download/:fileName", fileUpload.download);
+    app.get("/api/:courseId/files/", fileUpload.showFiles)
+
+    //Save file for individual as attachment
+    //Uses formidable, gridfs, fs
+
+}
