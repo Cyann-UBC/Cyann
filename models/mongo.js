@@ -37,7 +37,7 @@ var PostSchema  =  new Schema({
 });
 
 var CourseSchema  =  new Schema({
-    "courseName" : String,
+    "courseName" : {type:String, unique:true, required:true, trim:true},
     "instructor" : String,
     "TAs":[String],
     "posts"  : [PostSchema],

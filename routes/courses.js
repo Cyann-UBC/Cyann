@@ -1,25 +1,5 @@
 var Course  =   require("../models/mongo");
 
-// //Find all courses
-
-// exports.findPostsById = function(req,res){
-//   var courseId = req.params.courseId;
-//   var promise = Course.findById(courseId, '_id courseNum posts');
-//   promise.then(function(result){
-//     var promise = forumPosts.find({"course":result.courseNum}, 'id content author title comments created upvotes downvotes')
-//     promise.then(function(result){
-//       res.json({message:result})
-//     }).catch(function(err){
-//       res.send(err);
-//     })
-//   }).catch(function(err){
-//     res.send(err);
-//   })
-// }
-//
-// exports.findStudentById = function(req,res){
-//
-// }
 
 //Find all post
 exports.findAll = function(req,res){
@@ -31,6 +11,19 @@ exports.findAll = function(req,res){
   });
 }
 
+//Convert a courseName to courseId
+exports.findByName = function(req,res){
+  var courseName = req.params.courseName
+  var promise = Course.findOne({'courseName':courseName})
+  promise.then(function(result){
+    console.log(result._id)
+    res.json({courseId:result._id})
+  }).catch(function(err){
+    res.send(err);
+  })
+}
+
+//Find a specific course by courseId
 exports.findById = function(req,res){
   res.json(req.course)
 }
