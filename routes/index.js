@@ -15,11 +15,11 @@ module.exports = function(app){
     var posts = require('./posts');
     app.get("/api/courses/:courseId/posts", posts.findPostsByCourseId );
     app.get("/api/courses/:courseId/posts/:postId", posts.findPostsByCourseIdAndPostId );
-    app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
-    app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsById );
-    app.delete("/api/courses/:courseId/posts/:postId", posts.deleteById );
-    app.delete("/api/courses/:courseId/posts/", posts.deleteAll );
-
+    app.post("/api/courses/:courseId/students/:studentId/posts", posts.createPostsByCourseIdAndStudentId );//change
+    app.put("/api/courses/:courseId/students/:studentId/posts/:postId", posts.updatePostsByCourseIdAndStudentId );//change
+    app.delete("/api/courses/:courseId/students/:studentId/posts/:postId", posts.deleteByCourseIdAndStudentId );//change
+    app.delete("/api/courses/:courseId/students/:studentId/posts", posts.deleteAll );//change
+//localhost:3000/api/courses/57f689a44c0ee430a1c83d46/students/57f689f64c0ee430a1c83d47/posts
     var comments = require('./comments');
     app.post("/api/posts/:courseId/:postId/comments", comments.create);
     app.put("/api/posts/:courseId/:postId/comments/:commentId/upvote",comments.upvote);

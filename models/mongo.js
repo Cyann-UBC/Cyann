@@ -41,6 +41,7 @@ var CourseSchema  =  new Schema({
     "instructor" : String,
     "TAs":[String],
     "posts"  : [PostSchema],
+    "comments":[CommentSchema]
 });
 
 

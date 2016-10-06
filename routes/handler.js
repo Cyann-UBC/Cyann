@@ -9,7 +9,7 @@ exports.handleCourseId = function(req,res,next,id){
         err.status = 404;
         return next(err);
       }
-      console.log('as')
+    //  console.log('as')
       req.course = doc;
       return next();
     })

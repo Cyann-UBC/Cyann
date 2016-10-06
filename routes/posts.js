@@ -1,11 +1,12 @@
 var Course  =   require("../models/mongo");
-
+var Student =   require("../models/student")
 /*
   parameter: courseId
   usage: Retrieved all posts within a specific course given the courseId
 */
 exports.findPostsByCourseId = function(req,res){
     res.json({message:"Retrieved posts for course:"+req.course.courseName, data:req.course.posts})
+
 };
 
 /*
@@ -20,11 +21,19 @@ exports.findPostsByCourseIdAndPostId = function(req,res){
   parameter: courseId
   usage: Create a post within a specific course given the courseId
 */
-exports.createPostsByCourseId = function(req,res){
+exports.createPostsByCourseIdAndStudentId = function(req,res){
     req.course.posts.push(req.body)
     var promise = req.course.save();
     promise.then(function(result){
-      res.json({message:"Post created in course"+req.course.courseName, data:result})
+      var newId = result.posts[result.posts.length-1]._id
+      console.log(result.posts[result.posts.length-1])
+      req.student.posts.push(newId)
+      var promise = req.student.save();
+      promise.then(function(result){
+        res.json({studentUpdated:result})
+      }).catch(function(err){
+        res.send(err)
+      })
     }).catch(function(err){
       res.send(err)
     })
@@ -34,7 +43,7 @@ exports.createPostsByCourseId = function(req,res){
   parameter: courseId, postId
   usage: update a post within a specific course given the postId and courseId
 */
-exports.updatePostsById = function(req,res){
+exports.updatePostsByCourseIdAndStudentId = function(req,res){
     var courseId = req.params.courseId
     var postId = req.params.postId;
     var newTitle = req.body.title;
@@ -49,7 +58,8 @@ exports.updatePostsById = function(req,res){
     var promise = Course.update( {'_id': courseId,'posts._id': postId },
                                     { $set : {"posts.$.title":newTitle, "posts.$.content":newContent} } );
     promise.then(function (result){
-        res.json({ message: 'Updated post #'+postId+'!', data: result });
+        //res.json({ message: 'Updated post #'+postId+'!', data: result });
+      //  var promise = Student.update({'_id':req.params.studentId, ''})
     }).catch(function(err){
         res.send(err);
     });
@@ -59,7 +69,7 @@ exports.updatePostsById = function(req,res){
   parameter: courseId, postId
   usage: delete a post within a specific course given the postId and courseId
 */
-exports.deleteById = function(req,res){
+exports.deleteByCourseIdAndStudentId = function(req,res){
   var promise = req.post.remove()
   promise.then(function(){
     var promise = req.course.save()

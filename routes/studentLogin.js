@@ -19,12 +19,14 @@ exports.login = function(req,res,next){
 exports.signUp = function(req,res){
   if(
     req.body.ssc &&
+    req.body.name &&
     req.body.password &&
     req.body.confirmPassword
   ){
     if(req.body.password === req.body.confirmPassword){
       var newStudent = {
         ssc:req.body.ssc,
+        name:req.body.name,
         password:req.body.password
       }
       var promise = Student.create(newStudent)
