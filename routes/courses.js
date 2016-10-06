@@ -25,7 +25,13 @@ exports.findByName = function(req,res){
 
 //Find a specific course by courseId
 exports.findById = function(req,res){
-  res.json(req.course)
+  var courseId = req.params.courseId;
+  var promise = Course.findById(courseId);
+  promise.then(function (result){
+      res.json({ message: 'Course', data: result });
+  }).catch(function(err){
+      res.send(err);
+    });
 }
 
 // CREATE POST
