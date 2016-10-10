@@ -16,8 +16,8 @@ db.once("open",function(){
 // Create schema
 var CommentSchema = new Schema({
     "content" : String,
-    "author"  : String,
-    "course"  : String,
+    "author"  : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    "course"  : {type: mongoose.Schema.Types.ObjectId, ref: 'course'},
     "createdAt" : { type: Date, default: Date.now },
     "updatedAt" : { type: Date, default: Date.now },
     "upvotes"   : { type: Number, default:0},
@@ -27,9 +27,9 @@ var CommentSchema = new Schema({
 
 var PostSchema  =  new Schema({
     "title" : String,
-    "author"  : String,
     "content" : String,
-    "course"  : String,
+    "author"  : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    "course"  : {type: mongoose.Schema.Types.ObjectId, ref: 'course'},
     "createdAt" : { type: Date, default: Date.now },
     "updatedAt" : { type: Date, default: Date.now },
     "comments" : [CommentSchema]
@@ -38,8 +38,9 @@ var PostSchema  =  new Schema({
 
 var CourseSchema  =  new Schema({
     "courseName" : {type:String, unique:true, required:true, trim:true},
-    "instructor" : String,
-    "TAs":[String],
+    "instructor" : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    "TAs":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
+    "users":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     "posts"  : [PostSchema],
     "comments":[CommentSchema]
 });

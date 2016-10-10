@@ -1,23 +1,23 @@
-var Student = require('../models/student')
+var User = require('../models/user')
 var Course  =   require("../models/mongo");
 
-//find all student
+//find all user
 exports.findAll = function(req,res){
-  var promise = Student.find( {} , 'ssc name posts comments');
+  var promise = User.find( {} , 'ssc name posts comments');
   promise.then(function (result){
-      res.json({ message: 'Retrieved all student!', data: result });
+      res.json({ message: 'Retrieved all user!', data: result });
   }).catch(function(err){
       res.send(err);
   });
 }
 
-//Convert a studentId to a name
+//Convert a userId to a name
 exports.findById = function(req,res){
-  res.json({data:req.student})
+  res.json({data:req.user})
 }
 
 
-//find post by written by a specific student
+//find post by written by a specific user
 exports.findPostById = function(req,res){
     var promise = Course.aggregate({
         $match: {'posts.author': {$gte: 'Howard Zhou'}}

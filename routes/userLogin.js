@@ -1,16 +1,16 @@
-var Student = require('../models/student')
+var User = require('../models/user')
 var forumPosts  =   require("../models/mongo");
 
 exports.login = function(req,res,next){
-  var checkStudent = function (error,student) {
-    if(error || !student){
+  var checkUser = function (error,user) {
+    if(error || !user){
       res.json({"response":"Wrong ssc or password"})
     }else{
       res.json({response:'success'})
     }
   }
   if(req.body.ssc && req.body.password){
-    Student.authenticate(req.body.ssc, req.body.password,checkStudent);
+    User.authenticate(req.body.ssc, req.body.password,checkUser);
   }else{
     res.json({response:"please provide ssc and password"})
   }
@@ -24,14 +24,14 @@ exports.signUp = function(req,res){
     req.body.confirmPassword
   ){
     if(req.body.password === req.body.confirmPassword){
-      var newStudent = {
+      var newUser = {
         ssc:req.body.ssc,
         name:req.body.name,
         password:req.body.password
       }
-      var promise = Student.create(newStudent)
-      promise.then(function(student){
-        res.json({response:student})
+      var promise = User.create(newUser)
+      promise.then(function(user){
+        res.json({response:user})
       }).catch(function(err){
           res.send(err);
       });
