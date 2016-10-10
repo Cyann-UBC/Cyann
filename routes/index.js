@@ -11,6 +11,10 @@ module.exports = function(app){
     app.get("/api/courses/:courseId", courses.findById)
     app.post("/api/courses", courses.create);
 
+    /* todos:
+          userId needs to be x-www-form-urlencoded
+          check for permission before updating and deleting a post
+    */
     var posts = require('./posts');
     app.get("/api/courses/:courseId/posts", posts.findPostsByCourseId );
     app.get("/api/courses/:courseId/posts/:postId", posts.findPostsByCourseIdAndPostId );
