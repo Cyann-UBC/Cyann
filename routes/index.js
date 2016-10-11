@@ -8,10 +8,7 @@ module.exports = function(app){
 
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
-<<<<<<< HEAD
     //app.get("/api/courses/:courseName", courses.findByName)
-=======
->>>>>>> b28c02afcb362938086d5c4733d49fd985dd07b0
     app.get("/api/courses/:courseId", courses.findById)
     app.post("/api/courses", courses.create);
 

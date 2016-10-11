@@ -19,6 +19,7 @@ exports.login = function(req,res,next){
 exports.signUp = function(req,res){
   if(
     req.body.ssc &&
+    req.body.userType &&  //should add this field to create user successfully
     req.body.name &&
     req.body.password &&
     req.body.confirmPassword
@@ -27,7 +28,8 @@ exports.signUp = function(req,res){
       var newUser = {
         ssc:req.body.ssc,
         name:req.body.name,
-        password:req.body.password
+        password:req.body.password,
+        userType:req.body.userType //update userType into database
       }
       var promise = User.create(newUser)
       promise.then(function(user){
