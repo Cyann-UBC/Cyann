@@ -24,11 +24,11 @@ module.exports = function(app){
     app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
     var comments = require('./comments');
-    app.post("/api/posts/:courseId/:postId/comments", comments.create);
-    app.put("/api/posts/:courseId/:postId/comments/:commentId/upvote",comments.upvote);
-    app.put("/api/posts/:courseId/:postId/comments/:commentId/downvote",comments.downvote);
-    app.put("/api/posts/:courseId/:postId/comments/:commentId", comments.updateById);
-    app.delete("/api/posts/:courseId/:postId/comments/:commentId", comments.deleteById);
+    app.post("/api/courses/:courseId/posts/:postId/comments", comments.create);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/upvote",comments.upvote);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/downvote",comments.downvote);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.updateById);
+    app.delete("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.deleteById);
 
     var userLogin = require('./userLogin');
     app.post("/api/users/login", userLogin.login);
