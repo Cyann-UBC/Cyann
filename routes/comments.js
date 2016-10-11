@@ -1,89 +1,47 @@
-var forumPosts  =   require("../models/mongo");
+var Courses  = require("../models/mongo");
+var Users    = require("../models/user");
 
-// CREATE COMMENT BY POST-ID
+/*
+  parameter: courseId, postId
+  body: userId, content
+  usage: Create a comment within a specific post given the courseId + postId
+         Updates user's "comment" field with the newly created comment's _id
+*/
 exports.create = function(req,res){
-    var postId = req.params.postId;
-    var newComment = { 'content': req.body.content }
 
-    var promise = forumPosts.findByIdAndUpdate( postId,
-        {$push: {comments: newComment}},
-        {safe: true, upsert: true}
-    );
-    promise.then(function (result){
-      console.log(result)
-        res.json({ message: 'Added comment to post #'+postId+'!', data: result });
-    }).catch(function(err){
-        res.send(err);
-    });
-};
-// UPDATE COMMENT BY POST-ID + COMMENT-ID
-exports.updateById = function(req,res){
-    var postId = req.params.postId;
-    var commentId = req.params.commentId;
-    var updatedCommentContent = req.body.content;
-    var newDate = new Date()
-    var promise = forumPosts.update({ '_id': postId, "comments._id": commentId },
-                                    { $set : { "comments.$.content": updatedCommentContent , "comments.$.updated":newDate} } );
-
-    promise.then(function (result){
-        res.json({ message: 'Updated comment #'+commentId+' of post #'+postId+'!', data: result });
-    }).catch(function(err){
-        res.send(err);
-    });
-};
-// DELETE COMMENT BY POST-ID + COMMENT-ID
-exports.deleteById = function(req,res){
-    var postId = req.params.postId;
-    var commentId = req.params.commentId;
-
-    var promise = forumPosts.update({ '_id': postId, "comments._id":commentId },
-                                    { $pull : { "comments": { '_id': commentId } } } );
-    promise.then(function (result){
-        res.json({ message: 'Removed comment #'+commentId+' of post #'+postId+'!', data: result });
-    }).catch(function(err){
-        res.send(err);
-    });
-};
-
-// exports.upvote = function(req,res){
-//   var postId = req.params.postId;
-//   var commentId = req.params.commentId;
-//   // var promise = forumPosts.findByIdAndUpdate({'_id':postId, "comments._id":commentId},
-//   //                                 {$inc : {"comments.$.votes":1}})
-//   //
-//   promise.then(function(result){
-//     res.json({ message: result})
-//   }).catch(function(err){
-//     res.send(err);
-//   });
-// };
-
-exports.upvote = function(req,res){
+  // PARAMS
+  var courseId = req.params.courseId;
   var postId = req.params.postId;
-  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+  var newComment = { 'content': req.body.content };
 
-  forumPosts.findById(postId, function(err,doc){
-    if(err) res.json(err);
-
-    doc.comments.id(commentId).upvotes += 1
-    doc.save(function(err){
-      if(err) res.json(err)
-      res.json({message:doc})
+  var newCommentId = null;
+  // Find USER given courseId + postId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId }).exec()
+    // Append new COMMENT to our POST + save into DB
+    .then(function(result_courseObj){
+      var thisPost = result_courseObj.posts.id(postId).comments;
+      var newCommentObj = thisPost.create(newComment);
+      thisPost.push(newCommentObj);
+      newCommentId = newCommentObj._id; // retrieve _id of newly created comment
+      return result_courseObj.save();
     })
-  })
-};
-
-exports.downvote = function(req,res){
-  var postId = req.params.postId;
-  var commentId = req.params.commentId;
-
-  forumPosts.findById(postId, function(err,doc){
-    if(err) res.json(err);
-
-    doc.comments.id(commentId).downvotes += 1
-    doc.save(function(err){
-      if(err) res.json(err)
-      res.json({message:doc})
+    // Find USER given userId
+    .then(function(){
+      return Users.findOne({ '_id': userId }).exec();
     })
-  })
+    // Update USER's most recent COMMENT by pushing newest comment id
+    .then(function(result_userObj){
+      if( newCommentId != null )
+        result_userObj.comments.push(newCommentId);
+      return result_userObj.save();
+    })
+    // Send back response
+    .then(function(result_userObj){
+      res.json({ message: 'Added comment ('+newCommentId+') to post ('+postId+')', data: result_userObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    });
 };
