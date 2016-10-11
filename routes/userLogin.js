@@ -21,13 +21,15 @@ exports.signUp = function(req,res){
     req.body.ssc &&
     req.body.name &&
     req.body.password &&
-    req.body.confirmPassword
+    req.body.confirmPassword&&
+    req.body.userType
   ){
     if(req.body.password === req.body.confirmPassword){
       var newUser = {
         ssc:req.body.ssc,
         name:req.body.name,
-        password:req.body.password
+        password:req.body.password,
+        userType:req.body.userType
       }
       var promise = User.create(newUser)
       promise.then(function(user){
