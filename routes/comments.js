@@ -237,7 +237,35 @@ exports.unsetAsAnswer = function(req,res){
   usage: Find a comment within a specific post given the courseId + postId + commentId
          Increment upvote count & append userId into upvote field
 */
-// exports.upvote = function(req,res){}
+exports.upvote = function(req,res){
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+      if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
+        thisComment.upvotes += 1;
+        thisComment.upvotedUsers.push(userId);
+        return result_courseObj.save();
+      }
+      else{
+        res.json({ message: 'You have already voted for COMMENT ('+commentId+') from POST ('+postId+')', data: "" });
+      }
+    })
+    // Send back response
+    .then(function(result_courseObj){
+        res.json({ message: 'Upvoted COMMENT ('+commentId+') from POST ('+postId+')', data: result_courseObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    }); 
+}
 
 /*
   parameter: courseId, postId, commentId
@@ -245,4 +273,32 @@ exports.unsetAsAnswer = function(req,res){
   usage: Find a comment within a specific post given the courseId + postId + commentId
          Increment downvote count & append userId into downvote field
 */
-// exports.downvote = function(req,res){}
+exports.downvote = function(req,res){
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+      if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
+        thisComment.downvotes += 1;
+        thisComment.downvotedUsers.push(userId);
+        return result_courseObj.save();
+      }
+      else{
+        res.json({ message: 'You have already voted for COMMENT ('+commentId+') from POST ('+postId+')', data: "" });
+      }
+    })
+    // Send back response
+    .then(function(result_courseObj){
+        res.json({ message: 'Upvoted COMMENT ('+commentId+') from POST ('+postId+')', data: result_courseObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    }); 
+}
