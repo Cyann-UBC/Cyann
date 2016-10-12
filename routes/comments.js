@@ -32,7 +32,7 @@ exports.findById = function(req,res){
   // PARAMS
   var courseId = req.params.courseId;
   var postId = req.params.postId;
-  var commentId = req.params.commentsId;
+  var commentId = req.params.commentId;
 
   // Find COMMENT given courseId + postId + commentId
   Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
@@ -92,7 +92,47 @@ exports.create = function(req,res){
     });
 };
 
-// exports.updateById = function(req,res){}
+/*
+  parameter: courseId, postId, commentId
+  body: userId, content
+  usage: Edits a comment within a specific post given the courseId + postId + commentId
+*/
+exports.updateById = function(req,res){
+
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+  var newCommentContent = req.body.content;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+      var authorOfComment = thisComment.author;
+      if( authorOfComment == userId ){
+        thisComment.content = newCommentContent;
+        return result_courseObj.save();
+      }
+      
+      res.json({ message: 'You do not have permissions to edit COMMENT ('+commentId+') from POST ('+postId+')', data: "" });
+    })
+    // Send back response
+    .then(function(result_courseObj){
+        res.json({ message: 'Updated COMMENT ('+commentId+') from POST ('+postId+')', data: result_courseObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    });  
+}
+
+/*
+  parameter: courseId, postId, commentId
+  body: userId, content
+  usage: Delete a comment within a specific post given the courseId + postId + commentId
+*/
 exports.deleteById = function(req,res){
 
   // PARAMS
@@ -130,6 +170,7 @@ exports.deleteById = function(req,res){
       res.send(err);
     });  
 }
+
 // exports.setAsAnswer = function(req,res){}
 // exports.unsetAsAnswer = function(req,res){}
 // exports.upvote = function(req,res){}
