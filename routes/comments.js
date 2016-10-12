@@ -10,7 +10,7 @@ exports.findAll = function(req,res){
   // PARAMS
   var courseId = req.params.courseId;
   var postId = req.params.postId;
-  var commentId = req.params.commentsId;
+  var commentId = req.params.commentId;
 
   // Find COMMENT given courseId + postId + commentId
   Courses.findOne({ '_id': courseId, 'posts._id': postId }).exec()
@@ -58,7 +58,9 @@ exports.create = function(req,res){
   var postId = req.params.postId;
   // BODY (x-www-form-urlencoded)
   var userId = req.body.userId;
-  var newComment = { 'content': req.body.content };
+  var newComment = {  'content': req.body.content, 
+                      'author': userId, 
+                      'course': courseId };
 
   var newCommentId = null;
   // Find USER given courseId + postId
@@ -89,3 +91,46 @@ exports.create = function(req,res){
       res.send(err);
     });
 };
+
+// exports.updateById = function(req,res){}
+exports.deleteById = function(req,res){
+
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var authorOfComment = result_courseObj.posts.id(postId).comments.id(commentId).author;
+      if( authorOfComment == userId ){
+        result_courseObj.posts.id(postId).comments = result_courseObj.posts.id(postId).comments.filter(function(e){ return e.id != commentId; });
+        return result_courseObj.save();
+      }
+      
+      res.json({ message: 'You do not have permissions to remove COMMENT ('+commentId+') from POST ('+postId+')', data: "" });
+    })
+    // Find USER given userId
+    .then(function(){
+      return Users.findOne({ '_id': userId }).exec();
+    })
+    // Update USER's most recent COMMENT by removing commentId 
+    .then(function(result_userObj){
+      result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
+      return result_userObj.save();
+    })
+    // Send back response
+    .then(function(result_userObj){
+        res.json({ message: 'Removed COMMENT ('+commentId+') from POST ('+postId+')', data: result_userObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    });  
+}
+// exports.setAsAnswer = function(req,res){}
+// exports.unsetAsAnswer = function(req,res){}
+// exports.upvote = function(req,res){}
+// exports.downvote = function(req,res){}
