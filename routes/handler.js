@@ -22,18 +22,21 @@ exports.handlePostId = function(req,res,next,id){
     err.status = 404;
     return next(err);
   }
-  console.log(req.post)
+  // console.log(req.post)
   return next();
 };
 
-exports.handleCommenId = function(req,res,next,id){
-  req.comment = req.course.posts.comments.id(id)
+/*
+  Middleware that executes whenever the API endpoint contains a ":commendId" param
+  Precondition: API call contains ":postId" & route passes through this.handlePostId()
+*/
+exports.handleCommentId = function(req,res,next,id){
+  req.comment = req.post.comments.id(id);
   if(!req.comment){
-    err = new Error("Not Found");
+    err = new Error("Comment Not Found");
     err.status = 404;
     return next(err);
   }
-  //console.log(req.comment)
   return next();
 }
 

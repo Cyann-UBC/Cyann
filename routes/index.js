@@ -3,7 +3,7 @@ module.exports = function(app){
     var handler = require('./handler');
     app.param('courseId', handler.handleCourseId);
     app.param('postId', handler.handlePostId);
-    app.param('commentId', handler.handleCommenId);
+    app.param('commentId', handler.handleCommentId);
     app.param('userId', handler.handleId);
 
     var courses = require('./courses');
@@ -23,14 +23,22 @@ module.exports = function(app){
     app.delete("/api/courses/:courseId/users/:userId/posts/:postId", posts.deleteByCourseIdAndUserId );
     app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
+    //---------------------------------------
+    // COMMENT API
+    //---------------------------------------
     var comments = require('./comments');
     app.get("/api/courses/:courseId/posts/:postId/comments", comments.findAll);
-    app.get("/api/courses/:courseId/posts/:postId/comments/:commentsId", comments.findById);
+    app.get("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.findById);
     app.post("/api/courses/:courseId/posts/:postId/comments", comments.create);
-    // app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/upvote",comments.upvote);
-    // app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/downvote",comments.downvote);
-    // app.put("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.updateById);
-    // app.delete("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.deleteById);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.updateById);
+    app.delete("/api/courses/:courseId/posts/:postId/comments/:commentId", comments.deleteById);
+    // set/unset comment as answer
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/setAsAnswer",comments.setAsAnswer);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/unsetAsAnswer",comments.unsetAsAnswer);
+    // upvote/downvote comment
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/upvote",comments.upvote);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/downvote",comments.downvote);
+    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/resetVote",comments.resetVote);
 
     var userLogin = require('./userLogin');
     app.post("/api/users/login", userLogin.login);
