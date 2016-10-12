@@ -105,7 +105,9 @@ exports.updateById = function(req,res){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             var authorOfComment = thisComment.author;
             if( authorOfComment == userId ){
+                var now = new Date();
                 thisComment.content = newCommentContent;
+                thisComment.updatedAt = now;
                 responseObject.message = 'COMMENT updated';
                 return result_courseObj.save();
             }
@@ -125,7 +127,7 @@ exports.updateById = function(req,res){
 
 /*
     parameter: courseId, postId, commentId
-    body: userId, content
+    body: userId
     usage: Delete a comment within a specific post given the courseId + postId + commentId
 */
 exports.deleteById = function(req,res){
