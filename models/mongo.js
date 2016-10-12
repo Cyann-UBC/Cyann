@@ -18,11 +18,13 @@ var CommentSchema = new Schema({
     "content" : String,
     "author"  : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
     "course"  : {type: mongoose.Schema.Types.ObjectId, ref: 'course'},
-    "createdAt" : { type: Date, default: Date.now },
-    "updatedAt" : { type: Date, default: Date.now },
+    "isAnswer" : { type: Boolean, default: false},
     "upvotes"   : { type: Number, default:0},
     "downvotes"   : { type: Number, default:0},
-    // "deleted" : { type: Number, default: 0 } // Field to implement soft deletes
+    "upvotedUsers" : [{type: mongoose.Schema.Types.ObjectId, ref: 'User', select:false}],  // Private fields...
+    "downvotedUsers" : [{type: mongoose.Schema.Types.ObjectId, ref: 'User', select:false}], // Private fields...
+    "createdAt" : { type: Date, default: Date.now },
+    "updatedAt" : { type: Date, default: Date.now }
 });
 
 var PostSchema  =  new Schema({
@@ -42,7 +44,7 @@ var CourseSchema  =  new Schema({
     "TAs":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     "users":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     "posts"  : [PostSchema],
-    "comments":[CommentSchema]
+    // "comments":[CommentSchema]
 });
 
 
