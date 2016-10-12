@@ -171,7 +171,78 @@ exports.deleteById = function(req,res){
     });  
 }
 
-// exports.setAsAnswer = function(req,res){}
-// exports.unsetAsAnswer = function(req,res){}
+/*
+  parameter: courseId, postId, commentId
+  body: userId
+  usage: Find a comment within a specific post given the courseId + postId + commentId
+         Sets its 'isAnswer' flag to TRUE
+*/
+exports.setAsAnswer = function(req,res){
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+      thisComment.isAnswer = true;
+      return result_courseObj.save();
+    })
+    // Send back response
+    .then(function(result_courseObj){
+        res.json({ message: 'Flagged COMMENT ('+commentId+') from POST ('+postId+') as an answer', data: result_courseObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    }); 
+}
+
+/*
+  parameter: courseId, postId, commentId
+  body: userId
+  usage: Find a comment within a specific post given the courseId + postId + commentId
+         Sets its 'isAnswer' flag to Flag
+*/
+exports.unsetAsAnswer = function(req,res){
+  // PARAMS
+  var courseId = req.params.courseId;
+  var postId = req.params.postId;
+  var commentId = req.params.commentId;
+  // BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  // Find COMMENT given courseId + postId + commentId
+  Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    .then(function(result_courseObj){
+      var thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+      thisComment.isAnswer = false;
+      return result_courseObj.save();
+    })
+    // Send back response
+    .then(function(result_courseObj){
+        res.json({ message: 'Unflagged COMMENT ('+commentId+') from POST ('+postId+') as an answer', data: result_courseObj });
+    })
+    .catch(function(err){
+      res.send(err);
+    }); 
+}
+
+/*
+  parameter: courseId, postId, commentId
+  body: userId
+  usage: Find a comment within a specific post given the courseId + postId + commentId
+         Increment upvote count & append userId into upvote field
+*/
 // exports.upvote = function(req,res){}
+
+/*
+  parameter: courseId, postId, commentId
+  body: userId
+  usage: Find a comment within a specific post given the courseId + postId + commentId
+         Increment downvote count & append userId into downvote field
+*/
 // exports.downvote = function(req,res){}
