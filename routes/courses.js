@@ -47,3 +47,15 @@ exports.create = function(req,res){
         res.send(err);
     });
 };
+
+/*exports.updateById = function(req,res){
+    var courseId = req.params.courseId;
+    var promise = Course.update({ '_id': courseId },
+                                    { $set : { "Course.$.instructor": req.body.instructor , "Course.$.TAs": req.body.TAs } } );
+
+    promise.then(function (result){
+        res.json({ message: 'Updated course #'+courseId+'', data: result });
+    }).catch(function(err){
+        res.send(err);
+    });
+};*/

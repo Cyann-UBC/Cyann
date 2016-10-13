@@ -9,8 +9,9 @@ module.exports = function(app){
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
     //app.get("/api/courses/:courseName", courses.findByName)
-    app.get("/api/courses/:courseId", courses.findById)
+    app.get("/api/courses/:courseId", courses.findById);
     app.post("/api/courses", courses.create);
+    //app.put("/api/courses/:courseId", courses.updateById);
 
     /* todos:
           userId needs to be x-www-form-urlencoded
