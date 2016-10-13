@@ -39,7 +39,7 @@ var PostSchema  =  new Schema({
 var CourseSchema  =  new Schema({
     "courseName" : {type:String, unique:true, required:true, trim:true},
     //"instructor" : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
-    "instructor" : {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    "instructor" : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], //instructor should also be an array
     "TAs":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     "users":[{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
     "posts"  : [PostSchema],
