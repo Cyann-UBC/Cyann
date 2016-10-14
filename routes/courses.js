@@ -55,10 +55,12 @@ exports.updateById = function(req,res){
     var courseId = req.params.courseId;
     Course.findOne({'_id': courseId}).exec()
       .then(function(result){
-        if (req.body.TAs != "")
-          result.TAs.push(req.body.TAs);
-        if (req.body.TAs != "") 
-          result.instructor.push(req.body.instructor);
+        if (req.body.TAs != null) 
+          for (var i = 0; i < req.body.TAs.length; i++)
+            result.TAs.push(req.body.TAs[i]);
+        if (req.body.instructor != null)
+          for (var i = 0; i < req.body.instructor.length; i++)
+            result.instructor.push(req.body.instructor[i]);
         return result.save();
       })
       .then(function (result){
