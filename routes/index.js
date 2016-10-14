@@ -11,16 +11,15 @@ module.exports = function(app){
     app.get("/api/courses/:courseId", courses.findById)
     app.post("/api/courses", courses.create);
 
-    /* todos:
-          userId needs to be x-www-form-urlencoded
-          check for permission before updating and deleting a post
-    */
+    //---------------------------------------
+    // POST API
+    //---------------------------------------
     var posts = require('./posts');
     app.get("/api/courses/:courseId/posts", posts.findPostsByCourseId );
     app.get("/api/courses/:courseId/posts/:postId", posts.findPostsByCourseIdAndPostId );
-    app.post("/api/courses/:courseId/users/:userId/posts", posts.createPostsByCourseIdAndUserId );
+    app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
     app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsByCourseId );
-    app.delete("/api/courses/:courseId/users/:userId/posts/:postId", posts.deleteByCourseIdAndUserId );
+    app.delete("/api/courses/:courseId/posts/:postId", posts.deleteByCourseId );
     app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
     //---------------------------------------
