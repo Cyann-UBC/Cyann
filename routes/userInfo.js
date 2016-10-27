@@ -17,7 +17,7 @@ exports.findById = function(req,res){
 }
 
 
-//find post by written by a specific user
+//find post written by a specific user
 exports.findPostById = function(req,res){
     var promise = Course.aggregate({
         $match: {'posts.author': {$gte: 'Howard Zhou'}}

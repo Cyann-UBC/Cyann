@@ -6,6 +6,13 @@ module.exports = function(app){
     app.param('commentId', handler.handleCommenId);
     app.param('userId', handler.handleId);
 
+    //Honor System
+    var honor = require('./honor');
+    app.get("/api/honor/:userId", honor.getHonorPointsByUserId);
+    app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
+
+
+
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
     //app.get("/api/courses/:courseName", courses.findByName)

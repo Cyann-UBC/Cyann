@@ -29,7 +29,8 @@ exports.login = function(req,res,next){
 		    ssc:req.body.ssc,
 		    name:req.body.name,
 		    password:req.body.password,
-		    userType:req.body.userType
+		    userType:req.body.userType,
+		    honor:0
 		}
 		var promise = User.create(newUser)
 		promise.then(function(user){

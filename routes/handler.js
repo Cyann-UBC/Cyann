@@ -38,8 +38,8 @@ exports.handleCommenId = function(req,res,next,id){
 }
 
 exports.handleId = function(req,res,next,id){
-  var studnetId = req.params.userId
-  var promise = User.findById(studnetId)
+  var userId = req.params.userId
+  var promise = User.findById(userId)
   promise.then(function(user){
     req.user = user
     return next();

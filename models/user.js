@@ -21,7 +21,7 @@ var UserSchema = new Schema({
     "name": {type:String, required:true},
     "password"  : {type:String, required:true},
     "userType"  : {type:String, required:true},
-    "honour"    : Number,
+    "honor"    : Number,
     "joined" : { type: Date, default: Date.now },
     "posts"   : [{type: mongoose.Schema.Types.ObjectId, ref: 'course.posts'}],
     "comments":[{type: mongoose.Schema.Types.ObjectId, ref: 'course.comments'}],
