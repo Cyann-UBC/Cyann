@@ -1,0 +1,473 @@
+{
+	"id": "0332c767-02c4-968a-94dc-b56fadb71b78",
+	"name": "courses API tests",
+	"description": "",
+	"order": [
+		"b1a52906-56f2-1b2a-dc36-b0e4d37b44bc",
+		"15389b5b-c216-68d8-4292-626b6b97a87b",
+		"a6f39601-9922-e6e0-e0b5-06b9233e2fd3",
+		"18903ead-fd56-27ba-dd9d-78ce3a84e50b",
+		"775697e9-fa93-c4a9-6a3c-c362cdc14ce9",
+		"6ce19b9d-8b70-041e-8f44-baa7866365c3",
+		"32f8a900-6738-61e9-30ad-88f8ca685624",
+		"117e9acb-0007-d231-c99c-f7aeccd82b0e",
+		"d9bfaf9c-0fa9-449e-240f-4d49e289764c",
+		"3b8239db-eaf6-747e-cbab-07d338a65239"
+	],
+	"folders": [],
+	"timestamp": "2016-10-10T18:45:42.603Z",
+	"owner": "1101398",
+	"public": false,
+	"published": false,
+	"requests": [
+		{
+			"id": "117e9acb-0007-d231-c99c-f7aeccd82b0e",
+			"url": "localhost:3000/api/courses",
+			"method": "POST",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"data": [
+				{
+					"key": "courseName",
+					"value": "CPEN102",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "58000e42a192d77060b970e8",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "Create a course with only 1 TA",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "15389b5b-c216-68d8-4292-626b6b97a87b",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "localhost:3000/api/users/register",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "ssc",
+					"value": "instructor1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Instructor1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "confirmPassword",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userType",
+					"value": "instructor",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476398638359,
+			"name": "Register an instructor",
+			"description": "",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "18903ead-fd56-27ba-dd9d-78ce3a84e50b",
+			"url": "localhost:3000/api/users",
+			"method": "GET",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"data": [
+				{
+					"key": "ssc",
+					"value": "abcdefg",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Zhou",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "confirmPassword",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userType",
+					"value": "student",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "Get all Users",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "32f8a900-6738-61e9-30ad-88f8ca685624",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "localhost:3000/api/courses",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "courseName",
+					"value": "CPEN101",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "58000e30a192d77060b970e7",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476398927091,
+			"name": "Create a user with only 1 instructor specified",
+			"description": "",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "3b8239db-eaf6-747e-cbab-07d338a65239",
+			"url": "localhost:3000/api/courses/58004c5d8bd4057560071f25",
+			"method": "PUT",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"data": [
+				{
+					"key": "instructor",
+					"value": "58000e30a192d77060b970e7",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "58004008a192d77060b970ed",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "5800401ea192d77060b970ee",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "58000e42a192d77060b970e8",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "580040eda192d77060b970f0",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "Add TAs and Instructors to an existing course",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "6ce19b9d-8b70-041e-8f44-baa7866365c3",
+			"url": "localhost:3000/api/courses",
+			"method": "POST",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"data": [
+				{
+					"key": "courseName",
+					"value": "CPEN100",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "Create a course with instructors and TAs unspecified",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "775697e9-fa93-c4a9-6a3c-c362cdc14ce9",
+			"url": "localhost:3000/api/courses",
+			"method": "GET",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"data": [
+				{
+					"key": "ssc",
+					"value": "abcdefg",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Zhou",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "confirmPassword",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userType",
+					"value": "student",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"tests": null,
+			"preRequestScript": null,
+			"currentHelper": "normal",
+			"pathVariables": {},
+			"version": 2,
+			"name": "Get all courses",
+			"description": "",
+			"descriptionFormat": "html",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "a6f39601-9922-e6e0-e0b5-06b9233e2fd3",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "localhost:3000/api/users/register",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "ssc",
+					"value": "TA1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "TA1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "confirmPassword",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userType",
+					"value": "TA",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476398656545,
+			"name": "Register a TA",
+			"description": "",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "b1a52906-56f2-1b2a-dc36-b0e4d37b44bc",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "localhost:3000/api/users/register",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "ssc",
+					"value": "student1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "name",
+					"value": "Student1",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "password",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "confirmPassword",
+					"value": "123456",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "userType",
+					"value": "student",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476398613208,
+			"name": "Register a student",
+			"description": "",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		},
+		{
+			"id": "d9bfaf9c-0fa9-449e-240f-4d49e289764c",
+			"headers": "Content-Type: application/x-www-form-urlencoded\n",
+			"url": "localhost:3000/api/courses",
+			"preRequestScript": null,
+			"pathVariables": {},
+			"method": "POST",
+			"data": [
+				{
+					"key": "courseName",
+					"value": "CPEN103",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "58000e30a192d77060b970e7",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "58000e42a192d77060b970e8",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "instructor",
+					"value": "58004008a192d77060b970ed",
+					"type": "text",
+					"enabled": true
+				},
+				{
+					"key": "TAs",
+					"value": "58004037a192d77060b970ef",
+					"type": "text",
+					"enabled": true
+				}
+			],
+			"dataMode": "urlencoded",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1476411818881,
+			"name": "Create a course with 2 TAs and 2 instructors",
+			"description": "",
+			"collectionId": "0332c767-02c4-968a-94dc-b56fadb71b78"
+		}
+	]
+}
