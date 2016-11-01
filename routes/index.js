@@ -9,7 +9,7 @@ module.exports = function(app){
     //Honor System
     var honor = require('./honor');
     app.get("/api/honor/:userId", honor.getHonorPointsByUserId);
-    app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
+    //app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
 
 
 

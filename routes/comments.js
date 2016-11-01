@@ -285,6 +285,11 @@ exports.upvote = function(req,res){
                 responseObject.message = 'You have already voted for the COMMENT';
             }
         })
+
+        .then(function(){
+            User.findById(thisComment.author).honor += 1;
+        })
+
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
@@ -372,6 +377,11 @@ exports.resetVote = function(req,res){
                 responseObject.message = 'You have not voted for the COMMENT';
             }
         })
+
+        .then(function(){
+            User.findById(thisComment.author).honor -= 1;
+        })
+
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
