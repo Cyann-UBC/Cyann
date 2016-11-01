@@ -18,51 +18,83 @@ exports.findPostsByCourseIdAndPostId = function(req,res){
 
 /*
   parameter: courseId, userId
+  body: userId, title, content
   usage: Create a post within a specific course given the courseId
          Reference the created post inside the creator's "posts" field
 */
-exports.createPostsByCourseIdAndUserId = function(req,res){
-    req.course.posts.push(req.body)
-    var promise = req.course.save();
-    promise.then(function(result){
-      var newId = result.posts[result.posts.length-1]._id
-      console.log(result.posts[result.posts.length-1])
-      req.user.posts.push(newId)
-      var promise = req.user.save();
-      promise.then(function(result){
-        res.json({userUpdated:result})
-      }).catch(function(err){
-        res.send(err)
-      })
-    }).catch(function(err){
+exports.createPostsByCourseId = function(req,res){
+
+    // PARAMS
+    var courseId = req.params.courseId;
+
+    // BODY (x-www-form-urlencoded)
+    var userId = req.body.userId;
+
+    var newPost = {'title': req.body.title,
+                   'content': req.body.content,
+                   'author': userId,
+                   'course': courseId};
+    var newPostId = null;
+
+    //Create new post and get its postId
+    var newPostObj = req.course.posts.create(newPost);
+    req.course.posts.push(newPostObj);
+    newPostId = newPostObj._id;
+    //Save the course to DB
+    req.course.save()
+    .then(function(){
+    //Find the user by userId
+      return User.findById(userId)
+    })
+    .then(function(user){
+    //Push the postId to the user's POST collection
+      user.posts.push(newPostId)
+      return user.save();
+    })
+    .then(function(user){
+      res.json({message:"post created and user updated", user:user})
+    })
+    .catch(function(err){
       res.send(err)
     })
 };
 
 /*
   parameter: courseId, postId
+  body: userId, title, content
   usage: update a post within a specific course given the postId and courseId
 */
 exports.updatePostsByCourseId = function(req,res){
+    //PARAMS
     var courseId = req.params.courseId
     var postId = req.params.postId;
+
+    //BODY (x-www-form-urlencoded)
+    var userId = req.body.userId;
     var newTitle = req.body.title;
     var newContent = req.body.content;
+
+    var authorOfPost = req.post.author;
 
     var updatePost = {};
     if( newTitle )
         updatePost["title"] = newTitle;
     if( newContent )
         updatePost["content"] = newContent;
-        console.log(req.course.posts)
-    var promise = Course.update( {'_id': courseId,'posts._id': postId },
-                                    { $set : {"posts.$.title":newTitle, "posts.$.content":newContent} } );
-    promise.then(function (result){
-        res.json({ message: 'Updated post #'+postId+'!', data: result });
-      //  var promise = User.update({'_id':req.params.userId, ''})
-    }).catch(function(err){
-        res.send(err);
-    });
+
+    if(authorOfPost == userId){
+      var promise = Course.update( {'_id': courseId,'posts._id': postId },
+                                      { $set : {"posts.$.title":newTitle, "posts.$.content":newContent, "posts.$.updatedAt":new Date()} } );
+      promise.then(function (result){
+          res.json({ message: 'Updated post #'+postId+'!', data: result });
+        //  var promise = User.update({'_id':req.params.userId, ''})
+      }).catch(function(err){
+          res.send(err);
+      });
+    }else{
+      res.json({message:'You do not have permissions to edit the POST'})
+    }
+
 };
 
 /*
@@ -70,23 +102,38 @@ exports.updatePostsByCourseId = function(req,res){
   usage: delete a post within a specific course given the postId and courseId
          unreference the post from its creator(user)
 */
-exports.deleteByCourseIdAndUserId = function(req,res){
-  var promise = req.post.remove()
-  promise.then(function(){
-    var promise = req.course.save()
-    promise.then(function(result){
-      var promise = req.user.update({$pull: {'posts': req.params.postId}})
-      promise.then(function(result){
-        res.json({message:"user post deleted", data:result})
-      }).catch(function(err){
-        res.send(err)
-      })
-    }).catch(function(err){
-      res.send(err)
+exports.deleteByCourseId = function(req,res){
+  //PARAMS
+  var courseId = req.params.courseId
+  var postId = req.params.postId;
+
+  //BODY (x-www-form-urlencoded)
+  var userId = req.body.userId;
+
+  var userType = null;
+  var authorOfPost = req.post.author;
+
+  if(authorOfPost == userId ){
+    req.post.remove()
+    .then(function(){
+      return req.course.save()
     })
-  }).catch(function(err){
-    res.send(err)
-  })
+    .then(function(){
+      return User.findById(userId)
+    })
+    .then(function(user){
+      user.update({$pull: {'posts':postId}});
+    })
+    .then(function(result){
+      res.json({message:"Post deleted and user updated",data:result});
+    })
+    .catch(function(err){
+      res.send(err);
+    })
+  }
+  else{
+    res.json({message:"You do not have permissions to edit the POST"})
+  }
 }
 
 /*

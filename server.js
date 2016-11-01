@@ -3,8 +3,8 @@ var app         =   express();
 var morgan      =   require('morgan');                  // log requests to the console (express4)
 var bodyParser  =   require("body-parser");             // pull information from HTML POST (express4)
 // var multer  = require('multer')                         //use multer for file uploads
-
 var mongoose = require('mongoose');
+var path        =   require("path");
 
 
 app.use(morgan('dev'));                                 // log every request to the console{}
@@ -22,8 +22,13 @@ app.use(function(err, req, res, next) {
     next(err);
 });
 
-app.get('/', function(req, res) {   res.sendFile(path + '/public/index.html');  }); // Serves our homepage when user enters our BASE-URL
-// app.get('*', function(req, res) {   res.redirect('/');  }); // Refirect to homepage for all other requests
+//----------------------------------------
+// Routes for loading webpages
+//----------------------------------------
+var publicPath = path.resolve(__dirname, 'www');
+app.use(express.static(publicPath));
+app.get('/', function(req, res){ res.sendFile('/index.html', {root: publicPath}); });
+app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPath}); });
 
 app.listen(3000);
 console.log("Listening to PORT 3000");
