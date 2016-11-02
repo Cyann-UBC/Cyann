@@ -9,7 +9,7 @@ module.exports = function(app){
     app.param('courseId', handler.handleCourseId);
     app.param('postId', handler.handlePostId);
     app.param('commentId', handler.handleCommentId);
-    app.param('userId', handler.handleId);
+    app.param('userId', handler.handleUserId);
     
     //---------------------------------------
     // HONOR SYSTEM ROUTES
