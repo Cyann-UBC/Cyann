@@ -6,7 +6,6 @@ var Users = require("../models/user.js");
     usage: Find all comment within a specific post given the courseId + postId
 */
 exports.findAll = function(req,res){
-
     // PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
@@ -20,7 +19,6 @@ exports.findAll = function(req,res){
     usage: Find a comment within a specific post given the courseId + postId + commentId
 */
 exports.findById = function(req,res){
-
     // PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
@@ -48,28 +46,27 @@ exports.create = function(req,res){
                         'course': courseId };
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
+    var newCommentObj = null;
 
-    var newCommentId = null;
     // Find USER given courseId + postId
     Courses.findOne({ '_id': courseId, 'posts._id': postId })
         // Append new COMMENT to our POST + save into DB
         .then(function(result_courseObj){
             var thisComment = result_courseObj.posts.id(postId).comments;
-            var newCommentObj = thisComment.create(newComment);
+            newCommentObj = thisComment.create(newComment);
             thisComment.push(newCommentObj);
-            newCommentId = newCommentObj._id; // retrieve _id of newly created comment
             responseObject.message = 'COMMENT created';
             return result_courseObj.save();
         })
         // Find USER given userId
         .then(function(result_courseObj){
-            responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentId);
+            responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentObj._id);
             return Users.findOne({ '_id': userId });
         })
         // Update USER's most recent COMMENT by pushing newest comment id
         .then(function(result_userObj){
-            if( newCommentId != null )
-                result_userObj.comments.push(newCommentId);
+            if( newCommentObj._id != null )
+                result_userObj.comments.push(newCommentObj._id);
             return result_userObj.save();
         })
         // Send back response

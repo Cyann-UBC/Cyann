@@ -1,11 +1,20 @@
-var Course  =   require("../models/mongo");
-var User =   require("../models/user");
+var Courses = require("../models/course.js");
+var Users = require('../models/user.js')
 /*
   parameter: courseId
   usage: Retrieved all posts within a specific course given the courseId
 */
 exports.findPostsByCourseId = function(req,res){
-    res.json({message:"Retrieved posts for course:"+req.course.courseName, data:req.course.posts})
+    Courses.findById({ '_id': req.params.courseId })
+        .select("-__v")
+        .populate("instructor", "name", Users)
+        .populate("posts.author", "name", Users)
+        .populate("posts.comments.author", "name", Users)
+        .then(function (result){
+            res.json({ message: 'Retrieved All Posts!', data: result.posts });
+        }).catch(function(err){
+            res.send(err);
+        });
 };
 
 /*
@@ -23,40 +32,25 @@ exports.findPostsByCourseIdAndPostId = function(req,res){
          Reference the created post inside the creator's "posts" field
 */
 exports.createPostsByCourseId = function(req,res){
+    var newPost = { "title": req.body.title,
+                    "content": req.body.content,
+                    "author": req.body.author,
+                    "course": req.params.courseId };
+    var newPostObj = null;
 
-    // PARAMS
-    var courseId = req.params.courseId;
-
-    // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
-
-    var newPost = {'title': req.body.title,
-                   'content': req.body.content,
-                   'author': userId,
-                   'course': courseId};
-    var newPostId = null;
-
-    //Create new post and get its postId
-    var newPostObj = req.course.posts.create(newPost);
-    req.course.posts.push(newPostObj);
-    newPostId = newPostObj._id;
-    //Save the course to DB
-    req.course.save()
-    .then(function(){
-    //Find the user by userId
-      return User.findById(userId)
-    })
-    .then(function(user){
-    //Push the postId to the user's POST collection
-      user.posts.push(newPostId)
-      return user.save();
-    })
-    .then(function(user){
-      res.json({message:"post created and user updated", user:user})
-    })
-    .catch(function(err){
-      res.send(err)
-    })
+    Courses.findById({ "_id": req.params.courseId })
+        .then(function(thisCourse){
+            // Create new post and get its postId
+            newPostObj = thisCourse.posts.create(newPost);
+            thisCourse.posts.push(newPostObj);
+            return thisCourse.save();
+        })
+        .then(function(thisCourse){
+            res.json({ message: "Retrieved all courses!", data: newPostObj });
+        })
+        .catch(function(err){
+            res.send(err);
+        });
 };
 
 /*
@@ -83,11 +77,11 @@ exports.updatePostsByCourseId = function(req,res){
         updatePost["content"] = newContent;
 
     if(authorOfPost == userId){
-      var promise = Course.update( {'_id': courseId,'posts._id': postId },
+      var promise = Courses.update( {'_id': courseId,'posts._id': postId },
                                       { $set : {"posts.$.title":newTitle, "posts.$.content":newContent, "posts.$.updatedAt":new Date()} } );
       promise.then(function (result){
           res.json({ message: 'Updated post #'+postId+'!', data: result });
-        //  var promise = User.update({'_id':req.params.userId, ''})
+        //  var promise = Users.update({'_id':req.params.userId, ''})
       }).catch(function(err){
           res.send(err);
       });
@@ -119,7 +113,7 @@ exports.deleteByCourseId = function(req,res){
       return req.course.save()
     })
     .then(function(){
-      return User.findById(userId)
+      return Users.findById(userId)
     })
     .then(function(user){
       user.update({$pull: {'posts':postId}});
@@ -141,7 +135,7 @@ exports.deleteByCourseId = function(req,res){
   usage: delete a post within a specific course given the postId and courseId
 */
 exports.deleteAll = function(req,res){
-  var promise = Course.update({courseName:req.course.courseName}, { $set: { posts: [] }})
+  var promise = Courses.update({courseName:req.course.courseName}, { $set: { posts: [] }})
   promise.then(function(result){
     res.json({data:result})
   }).catch(function(err){

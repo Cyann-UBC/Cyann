@@ -5,7 +5,7 @@ exports.handleCourseId = function(req,res,next,id){
     Courses.findById({ '_id': req.params.courseId })
         .populate("instructor", "name", Users)
         .populate("posts.author", "name", Users)
-        .populate("comments.author", "name", Users)
+        .populate("posts.comments.author", "name", Users)
         .then(function (result){
             if(!result){
                 err = new Error("Not Found");
