@@ -1,12 +1,11 @@
-var Courses    = require("../models/mongo");
-var Users        = require("../models/user");
+var Courses = require("../models/course.js");
+var Users = require("../models/user.js");
 
 /*
     parameter: courseId, postId
     usage: Find all comment within a specific post given the courseId + postId
 */
 exports.findAll = function(req,res){
-
     // PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
@@ -20,7 +19,6 @@ exports.findAll = function(req,res){
     usage: Find a comment within a specific post given the courseId + postId + commentId
 */
 exports.findById = function(req,res){
-
     // PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
@@ -48,28 +46,27 @@ exports.create = function(req,res){
                         'course': courseId };
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
+    var newCommentObj = null;
 
-    var newCommentId = null;
     // Find USER given courseId + postId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId })
         // Append new COMMENT to our POST + save into DB
         .then(function(result_courseObj){
             var thisComment = result_courseObj.posts.id(postId).comments;
-            var newCommentObj = thisComment.create(newComment);
+            newCommentObj = thisComment.create(newComment);
             thisComment.push(newCommentObj);
-            newCommentId = newCommentObj._id; // retrieve _id of newly created comment
             responseObject.message = 'COMMENT created';
             return result_courseObj.save();
         })
         // Find USER given userId
         .then(function(result_courseObj){
-            responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentId);
-            return Users.findOne({ '_id': userId }).exec();
+            responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentObj._id);
+            return Users.findOne({ '_id': userId });
         })
         // Update USER's most recent COMMENT by pushing newest comment id
         .then(function(result_userObj){
-            if( newCommentId != null )
-                result_userObj.comments.push(newCommentId);
+            if( newCommentObj._id != null )
+                result_userObj.comments.push(newCommentObj._id);
             return result_userObj.save();
         })
         // Send back response
@@ -100,7 +97,7 @@ exports.updateById = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             var authorOfComment = thisComment.author;
@@ -143,7 +140,7 @@ exports.deleteById = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             var authorOfComment = result_courseObj.posts.id(postId).comments.id(commentId).author;
             if( authorOfComment == userId ){
@@ -157,7 +154,7 @@ exports.deleteById = function(req,res){
         })
         // Find USER given userId
         .then(function(){
-            return Users.findOne({ '_id': userId }).exec();
+            return Users.findOne({ '_id': userId });
         })
         // Update USER's most recent COMMENT by removing commentId 
         .then(function(result_userObj){
@@ -192,7 +189,7 @@ exports.setAsAnswer = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.isAnswer != true ){
@@ -232,7 +229,7 @@ exports.unsetAsAnswer = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.isAnswer != false ){
@@ -272,7 +269,7 @@ exports.upvote = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
@@ -285,6 +282,11 @@ exports.upvote = function(req,res){
                 responseObject.message = 'You have already voted for the COMMENT';
             }
         })
+
+        .then(function(){
+            User.findById(thisComment.author).honor += 1;
+        })
+
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
@@ -313,7 +315,7 @@ exports.downvote = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
@@ -353,7 +355,7 @@ exports.resetVote = function(req,res){
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId }).exec()
+    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.upvotedUsers.indexOf(userId) > -1 ){
@@ -372,6 +374,11 @@ exports.resetVote = function(req,res){
                 responseObject.message = 'You have not voted for the COMMENT';
             }
         })
+
+        .then(function(){
+            User.findById(thisComment.author).honor -= 1;
+        })
+
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
