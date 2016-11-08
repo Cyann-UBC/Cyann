@@ -1,29 +1,32 @@
-var Course  =   require("../models/mongo");
-var User = require('../models/user')
+var Courses = require("../models/course.js");
+var Users = require('../models/user.js');
 
 exports.handleCourseId = function(req,res,next,id){
-    Course.findById(req.params.courseId,function(err,doc){
-      if(err) return next(err);
-      if(!doc){
-        err = new Error("Not Found");
-        err.status = 404;
-        return next(err);
-      }
-    //  console.log('as')
-      req.course = doc;
-      return next();
-    })
+    Courses.findById({ '_id': req.params.courseId })
+        .populate("instructor", "name", Users)
+        .populate("posts.author", "name", Users)
+        .populate("posts.comments.author", "name", Users)
+        .then(function (result){
+            if(!result){
+                err = new Error("Not Found");
+                err.status = 404;
+                return next(err);
+            }
+            req.course = result;
+            return next();
+        }).catch(function(err){
+            next(err);
+        });
 };
 
 exports.handlePostId = function(req,res,next,id){
-  req.post = req.course.posts.id(id)
-  if(!req.post){
-    err = new Error("Not Found");
-    err.status = 404;
-    return next(err);
-  }
-  // console.log(req.post)
-  return next();
+    req.post = req.course.posts.id(id)
+    if(!req.post){
+        err = new Error("Not Found");
+        err.status = 404;
+        return next(err);
+    }
+    return next();
 };
 
 /*
@@ -31,22 +34,23 @@ exports.handlePostId = function(req,res,next,id){
   Precondition: API call contains ":postId" & route passes through this.handlePostId()
 */
 exports.handleCommentId = function(req,res,next,id){
-  req.comment = req.post.comments.id(id);
-  if(!req.comment){
-    err = new Error("Comment Not Found");
-    err.status = 404;
-    return next(err);
-  }
-  return next();
+    req.comment = req.post.comments.id(id);
+    if(!req.comment){
+        err = new Error("Comment Not Found");
+        err.status = 404;
+        return next(err);
+    }
+    return next();
 }
 
-exports.handleId = function(req,res,next,id){
-  var userId = req.params.userId
-  var promise = User.findById(userId)
-  promise.then(function(user){
-    req.user = user
-    return next();
-  }).catch(function(err){
-    res.send(err)
-  })
+exports.handleUserId = function(req,res,next,id){
+    var userId = req.params.userId
+    Users.findById(userId)
+        .select('-__v')
+        .then(function(user){
+            req.user = user
+            return next();
+        }).catch(function(err){
+            res.send(err)
+        });
 }

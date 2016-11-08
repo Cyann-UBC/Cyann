@@ -1,71 +1,75 @@
-var Course  =   require("../models/mongo");
-
+var Courses = require("../models/course.js");
+var Users = require("../models/user.js");
 
 //Find all post
 exports.findAll = function(req,res){
-  var promise = Course.find( {}, 'courseName instructor TAs posts' );
-  promise.then(function (result){
-      res.json({ message: 'Retrieved all courses!', data: result });
-  }).catch(function(err){
-      res.send(err);
-  });
+    Courses.find()
+        .select("-posts -__v")
+        .populate("instructor", "name", Users)
+        .populate("TAs", "name", Users)
+        .then(function (result){
+            res.json({ message: "Retrieved all courses!", data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
 }
 
 //Convert a courseName to courseId
 exports.findByName = function(req,res){
-  var courseName = req.params.courseName
-  var promise = Course.findOne({'courseName':courseName})
-  promise.then(function(result){
-    console.log(result._id)
-    res.json({courseId:result._id})
-  }).catch(function(err){
-    res.send(err);
-  })
+    Courses.findOne({"courseName": req.params.courseName})
+        .select("-posts -__v")
+        .populate("instructor", "name", Users)
+        .then(function(result){
+            res.json({ message: "Course Found!", data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
 }
 
 //Find a specific course by courseId
 exports.findById = function(req,res){
-  var courseId = req.params.courseId;
-  var promise = Course.findById(courseId);
-  promise.then(function (result){
-      res.json({ message: 'Course', data: result });
-  }).catch(function(err){
-      res.send(err);
-    });
+    Courses.findById({ "_id": req.params.courseId })
+        .select("-posts -__v")
+        .populate("instructor", "name", Users)
+        .then(function (result){
+            res.json({ message: "Course Found!", data: result });
+        }).catch(function(err){
+            res.send(err);
+        });aa
 }
 
-// CREATE course
+// CREATE COURSE
 exports.create = function(req,res){
-    var newCourse = new Course();           // create a new instance of the POST model
-    newCourse.courseName = req.body.courseName;
-    if (req.body.instructor != "")          // when a course is created, instructor can be empty
-      newCourse.instructor = req.body.instructor;
-    if (req.body.TAs != "")                 // when a course is created, TAs can be empty
-      newCourse.TAs = req.body.TAs;
-    var promise = newCourse.save();
-    promise.then(function (result){
-        res.json({ message: 'Course created!', data: result });
-    }).catch(function(err){
-        res.send(err);
-    });
+    var newCourse = { courseName: req.body.courseName,
+                     instructor: req.body.instructor,
+                     TAs: req.body.TAs.split(" ").filter(onlyUnique) };
+    Courses.create(newCourse)
+        .then(function (result){
+            res.json({ message: "Course created!", data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
 };
-
+// Helper Method for FILTER()
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
 
 exports.updateById = function(req,res){
     var courseId = req.params.courseId;
-    Course.findOne({'_id': courseId}).exec()
-      .then(function(result){
-        if (req.body.TAs != null) 
-          for (var i = 0; i < req.body.TAs.length; i++)
-            result.TAs.push(req.body.TAs[i]);
-        if (req.body.instructor != null)
-          for (var i = 0; i < req.body.instructor.length; i++)
-            result.instructor.push(req.body.instructor[i]);
-        return result.save();
-      })
-      .then(function (result){
-        res.json({ message: 'Updated course #'+courseName+'', data: result });
-      }).catch(function(err){
-        res.send(err);
-      });
+    Courses.findOne({'_id': courseId})
+        .then(function(result){
+            if (req.body.TAs != null) 
+                for (var i = 0; i < req.body.TAs.length; i++)
+                    result.TAs.push(req.body.TAs[i]);
+            if (req.body.instructor != null)
+                for (var i = 0; i < req.body.instructor.length; i++)
+                    result.instructor.push(req.body.instructor[i]);
+            return result.save();
+        })
+        .then(function (result){
+            res.json({ message: 'Updated course #'+courseName+'', data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
 };
