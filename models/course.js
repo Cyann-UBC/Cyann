@@ -5,7 +5,9 @@ var db = mongoose.createConnection("mongodb://localhost:27017/courseCollection")
     db.on("error",function(err){ console.error("MongoDB Connection Failed",err); });
     db.once("open",function(){ console.log("MongoDB [courseCollection] connected successfully"); });
 
-// Create schema
+//-----------------------------------
+// DATABASE SCHEMA
+//-----------------------------------
 var CommentSchema = new mongoose.Schema({
     "content": String,
     "course": { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
@@ -37,21 +39,20 @@ var CourseSchema = new mongoose.Schema({
     "posts": [PostSchema]
 });
 
+var sortComments = function(a,b){
+  // "-": "a" will be positioned BEFORE "b"
+  // "0": no change
+  // "+": "a" will be positioned AFTER "b"
+  if(a.upvotes === b.upvotes){
+    return b.updated - a.updated
+  }
+  return b.upvotes - a.upvotes;
+}
 
-// var sortComments = function(a,b){
-//   // "-": negative a before b
-//   // "0": no change
-//   // "+": positive a after b
-//   if(a.upvotes === b.upvotes){
-//     return b.updated - a.updated
-//   }
-//   return b.upvotes - a.upvotes;
-// }
-
-// PostSchema.pre("save",function(next){
-//     this.comments.sort(sortComments);
-//     next()
-// })
+PostSchema.pre("save",function(next){
+    this.comments.sort(sortComments);
+    next()
+})
 
 // argv[0] == db collection name,
 // argv[1] == mongoose schema to use
