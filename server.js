@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/public'));
 // Error handler
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.json({ message: err.message, error: err });
+    res.json({ message: err.message, error: err });r
     next(err);
 });
 
