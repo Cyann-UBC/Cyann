@@ -1,6 +1,6 @@
 # Cyann (Backend)
 
-NodeJS + MongoDB backend used for providing API endpoints for for **Cyann** Mobile & Web Application.
+NodeJS + MongoDB backend used for providing API endpoints for **Cyann** Mobile & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
 
 ## Install
 
