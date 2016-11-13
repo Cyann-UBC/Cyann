@@ -59,7 +59,7 @@ module.exports = function(app){
     //---------------------------------------
     var userLogin = require('./userLogin');
     app.post("/api/users/login", userLogin.login);
-    app.post("/api/users/register",userLogin.signUp);
+    //app.post("/api/users/register",userLogin.signUp);
 
     //---------------------------------------
     // USER INFO ROUTES
