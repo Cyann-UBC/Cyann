@@ -1,5 +1,10 @@
 var Courses = require("../models/course.js");
-var Users = require('../models/user.js')
+var Users = require('../models/user.js');
+var jwt = require('jsonwebtoken');
+var request = require('request');
+
+//app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
+//app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['api/user/register'] }));
 
 exports.login = function(req,res,next){
     var checkUser = function (error,user) {
@@ -16,31 +21,62 @@ exports.login = function(req,res,next){
     }
 }
 
-// exports.signUp = function(req,res){
-//     if( req.body.username &&
-//         req.body.name &&
-//         req.body.password &&
-//         req.body.confirmPassword&&
-//         req.body.userType ){
-        
-//         if(req.body.password === req.body.confirmPassword){
-//             var newUser = { username: req.body.username,
-//                             name: req.body.name,
-//                             password: req.body.password,
-//                             userType: req.body.userType };
-            
-//             Users.create(newUser)
-//                 .then(function(user){
-//                     res.json({ "response": user });
-//                 }).catch(function(err){
-//                     res.send(err);
-//                 });
-//         }else{
-//             res.json({ "response": "Passwords don't match" });
-//         }
-//     }else{
-//         var err = new Error('Field missing')
-//         err.status = 400;
-//         res.json(err)
-//     }
-//}
+exports.register = function(req,res){
+    // Grab the social network and token
+    var socialToken = req.body.socialToken;
+
+    // Validate the social token with Facebook
+    validateWithProvider(socialToken).then(function (profile) {
+        if( req.body.name &&
+            req.body.userType )
+        {
+            var myToken = createJwt(profile);
+            //res.json(myToken);
+            var newUser =   { 
+                                name: req.body.name,
+                                jwt: myToken,
+                                userType: req.body.userType 
+                            };
+            //res.json({newUser});
+            Users.create(newUser)
+                .then(function(user){
+                    res.json('haha');
+                }).catch(function(err){
+                    res.send(err);
+                });
+        }
+        else    {
+                    res.json({ "response": "Missing required fields." });
+                    var err = new Error('Field missing')
+                    err.status = 400;
+                    res.json(err)
+                }
+    }).catch(function (err) {
+        res.send('Failed!' + err.message);
+    });
+}
+
+function validateWithProvider(socialToken) {
+    return new Promise(function (resolve, reject) {
+        // Send a GET request to Facebook with the token as query string
+        request({
+                url: 'https://graph.facebook.com/me',
+                qs: {access_token: socialToken}
+            },
+            function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    resolve(JSON.parse(body));
+                } else {
+                    reject(err);
+                }
+            }
+        );
+    });
+}
+
+function createJwt(profile) {
+    return jwt.sign(profile, 'CPEN321_CYANN', {
+        expiresIn: '2h',
+        issuer: 'CYANN'
+    });
+}

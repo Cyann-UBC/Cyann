@@ -16,7 +16,6 @@ module.exports = function(app){
     //---------------------------------------
     var honor = require('./honor');
     app.get("/api/honor/:userId", honor.getHonorPointsByUserId);
-    //app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
     
     //---------------------------------------
     // COURSES ROUTES
@@ -59,7 +58,7 @@ module.exports = function(app){
     //---------------------------------------
     var userLogin = require('./userLogin');
     app.post("/api/users/login", userLogin.login);
-    //app.post("/api/users/register",userLogin.signUp);
+    app.post("/api/users/register", userLogin.register);
 
     //---------------------------------------
     // USER INFO ROUTES
