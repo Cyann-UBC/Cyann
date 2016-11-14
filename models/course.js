@@ -37,6 +37,20 @@ var CourseSchema = new mongoose.Schema({
     "posts": [PostSchema]
 });
 
+//return the posts in order of newest to oldest so user doesn't have to scroll
+//to the bottom of the screen
+var sortPosts = function(a,b){
+  if(a.createdAt < b.createdAt){
+    return a.createdAt < b.createdAt
+  }
+  return b.createdAt - a.createdAt
+}
+
+CourseSchema.pre("save",function(next){
+  this.posts.sort(sortPosts);
+  next()
+})
+
 
 // var sortComments = function(a,b){
 //   // "-": negative a before b
