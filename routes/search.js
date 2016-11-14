@@ -27,7 +27,6 @@ exports.searchPosts = function(req,res){
 
             // FILTER out posts that isn't author'ed by the given userId
             if( userId ){
-                res.json({ message: 'BbBBB!', data: filteredResults });
                 filteredResults = filteredResults.filter(function(thisPost){
                     return String(thisPost.author._id) === String(userId);
                 });
