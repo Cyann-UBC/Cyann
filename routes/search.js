@@ -9,6 +9,7 @@ exports.searchPosts = function(req,res){
 
     var keyword = req.query.keyword;
     var userId = req.query.userId;
+    var timestamp = req.query.timestamp; // UTC timestamp
 
     Courses.findById({ '_id': req.params.courseId })
         .select("-__v")
@@ -29,6 +30,13 @@ exports.searchPosts = function(req,res){
             if( userId ){
                 filteredResults = filteredResults.filter(function(thisPost){
                     return String(thisPost.author._id) === String(userId);
+                });
+            }
+
+            // FILTER out posts that are created more than X time ago (X is in UTC timestamp format)
+            if( timestamp ){
+                filteredResults = filteredResults.filter(function(thisPost){
+                    return thisPost.createdAt >= timestamp;
                 });
             }
 
