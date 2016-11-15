@@ -58,23 +58,22 @@ exports.create = function(req,res){
             responseObject.message = 'COMMENT created';
             return result_courseObj.save();
         })
-        // Find USER given userId
+        // Push the newly created comment to USER's document
         .then(function(result_courseObj){
             responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentObj._id);
-            return Users.findOne({ '_id': userId });
-        })
-        // Update USER's most recent COMMENT by pushing newest comment id
-        .then(function(result_userObj){
-            if( newCommentObj._id != null )
-                result_userObj.comments.push(newCommentObj._id);
-            return result_userObj.save();
+            return Users.update(
+                       { _id: userId },
+                       { $push: { comments: newCommentObj._id } }
+                    )
         })
         // Send back response
-        .then(function(){
+        .then(function( test ){
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         });
 };
 
@@ -282,11 +281,9 @@ exports.upvote = function(req,res){
                 responseObject.message = 'You have already voted for the COMMENT';
             }
         })
-
         .then(function(){
             User.findById(thisComment.author).honor += 1;
         })
-
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
@@ -374,11 +371,9 @@ exports.resetVote = function(req,res){
                 responseObject.message = 'You have not voted for the COMMENT';
             }
         })
-
         .then(function(){
             User.findById(thisComment.author).honor -= 1;
         })
-
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
