@@ -3,8 +3,6 @@ var Users = require('../models/user.js');
 var jwt = require('jsonwebtoken');
 var request = require('request');
 
-//app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
-//app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['api/user/register'] }));
 
 exports.login = function(req,res,next){
     var checkUser = function (error,user) {
@@ -22,35 +20,40 @@ exports.login = function(req,res,next){
 }
 
 exports.register = function(req,res){
+
+    if( !req.body.name || !req.body.userType ) {
+        var err = new Error ('Name and userType required!');
+        err.status = 400;
+        res.json(err);
+    }
     // Grab the social network and token
     var socialToken = req.body.socialToken;
 
     // Validate the social token with Facebook
     validateWithProvider(socialToken).then(function (profile) {
-        if( req.body.name &&
-            req.body.userType )
-        {
-            var myToken = createJwt(profile);
-            //res.json(myToken);
-            var newUser =   { 
-                                name: req.body.name,
-                                jwt: myToken,
-                                userType: req.body.userType 
-                            };
-            //res.json({newUser});
-            Users.create(newUser)
-                .then(function(user){
-                    res.json('haha');
-                }).catch(function(err){
-                    res.send(err);
-                });
-        }
-        else    {
-                    res.json({ "response": "Missing required fields." });
-                    var err = new Error('Field missing')
-                    err.status = 400;
-                    res.json(err)
+        Users.find({ facebookId: profile.id })
+            .then(  function(result) {
+                if (result.length == 0) {
+                    var newUser =   { 
+                                        name: req.body.name,
+                                        userType: req.body.userType,
+                                        facebookId: profile.id
+                                    };
+                    return Users.create(newUser);
                 }
+                return result[0];
+            })
+            .then(function(user){
+                res.json(jwt.sign({   
+                                    profileId: profile.id,
+                                    userId: user._id    
+                                    }, 'CPEN321_CYANN', {
+                                        issuer: 'CYANN'
+                                    }));
+            })
+            .catch(function(err){
+                res.send(err);
+            });
     }).catch(function (err) {
         res.send('Failed!' + err.message);
     });
@@ -71,12 +74,5 @@ function validateWithProvider(socialToken) {
                 }
             }
         );
-    });
-}
-
-function createJwt(profile) {
-    return jwt.sign(profile, 'CPEN321_CYANN', {
-        expiresIn: '2h',
-        issuer: 'CYANN'
     });
 }

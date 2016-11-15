@@ -46,25 +46,27 @@ app.get('/', function(req, res){ res.sendFile('/index.html', {root: publicPath})
 app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPath}); });
 
 
-
-
-
-// app.get('/secure', function (req, res) {
-//     var jwtString = req.get.jwt;
-
-//     try {
-//         var profile = verifyJwt(jwtString);
-//         res.send('You are good people: ' + profile.id);
-//     } catch (err) {
-//         res.send('Hey, you are not supposed to be here');
-//     }
-// });
-
-// function verifyJwt(jwtString) {
-//     return jwt.verify(jwtString, secretKey, {
-//         issuer: 'CYANN'
-//     });
-// }
+//----------------------------------------
+// USER AUTHENTICATION
+//----------------------------------------
+app.use(function (req, res) {
+    //var jwtString = req.query.jwt;
+    res.json(req.header);
+    try {
+        var CyannProfile = verifyJwt(jwtString);
+        req.userId = CyannProfile.userId;
+        return next();
+    } catch (err) {
+        res.send('Invalid JWT');
+        res.status(400);
+        // error
+    }
+});
+function verifyJwt(jwtString) {
+    return jwt.verify(jwtString, 'CPEN321_CYANN', {
+        issuer: 'CYANN'
+    });
+}
 
 
 //----------------------------------------
