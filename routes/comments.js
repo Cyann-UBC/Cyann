@@ -1,3 +1,5 @@
+"use strict"
+
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
 
@@ -11,6 +13,7 @@ exports.findAll = function(req,res){
     var postId = req.params.postId;
 
     var allComment = req.post.comments;
+    res.status( 200 );
     res.json({ message: 'All COMMENT retrieved', data: allComment });
 };
 
@@ -25,6 +28,7 @@ exports.findById = function(req,res){
     var commentId = req.params.commentId;
 
     var thisComment = req.comment;
+    res.status( 200 );
     res.json({ message: 'COMMENT retrieved', data: thisComment });
 };
 
@@ -36,15 +40,20 @@ exports.findById = function(req,res){
 */
 exports.create = function(req,res){
 
-    // PARAMS
+    // Extract PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
-    // BODY (x-www-form-urlencoded)
     var userId = req.body.userId;
-    var newComment = {  'content': req.body.content, 
+    var commentContent = req.body.content;
+
+    if( !commentContent || commentContent == "" ){        
+        res.status( 400 );
+        res.json({ message: "You cannot create comments with EMPTY content" });
+    }
+
+    var newComment = {  'content': commentContent, 
                         'author': userId, 
                         'course': courseId };
-    // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var newCommentObj = null;
 
@@ -66,10 +75,9 @@ exports.create = function(req,res){
                        { $push: { comments: newCommentObj._id } }
                     )
         })
-        // Send back response
-        .then(function( test ){
+        .then(function(){
             res.status( 200 );
-            res.json( responseObject );
+            res.json( responseObject ); // return newly created comment
         })
         .catch(function(err){
             res.status( 500 );
@@ -114,10 +122,12 @@ exports.updateById = function(req,res){
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         });    
 }
 
@@ -163,10 +173,12 @@ exports.deleteById = function(req,res){
         // Send back response
         .then(function(result_userObj){
             responseObject.data = result_userObj;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         });    
 }
 
@@ -203,10 +215,12 @@ exports.setAsAnswer = function(req,res){
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         }); 
 }
 
@@ -243,10 +257,12 @@ exports.unsetAsAnswer = function(req,res){
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         }); 
 }
 
@@ -261,79 +277,55 @@ exports.upvote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
     var userId = req.body.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
+    var updateHonorPoints = false;
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
-            if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
+            if( thisComment.author == userId ){
+                responseObject.message = 'You cannot upvote your own COMMENT';
+                responseObject.data = thisComment;
+                res.json( responseObject );
+            }
+            else if( thisComment.upvotedUsers.indexOf(userId) < 0 ){
                 thisComment.upvotes += 1;
                 thisComment.upvotedUsers.push(userId);
                 responseObject.message = 'COMMENT upvoted';
+                updateHonorPoints = true;
                 return result_courseObj.save();
             }
             else{
                 responseObject.message = 'You have already voted for the COMMENT';
+                responseObject.data = thisComment;
+                res.json( responseObject );
             }
         })
         .then(function(){
-            User.findById(thisComment.author).honor += 1;
-        })
-        // Send back response
-        .then(function(){
-            responseObject.data = thisComment;
-            res.json( responseObject );
-        })
-        .catch(function(err){
-            res.send(err);
-        }); 
-}
-
-/*
-    parameter: courseId, postId, commentId
-    body: userId
-    usage: Find a comment within a specific post given the courseId + postId + commentId
-                 Increment downvote count & append userId into downvote field
-*/
-exports.downvote = function(req,res){
-    // PARAMS
-    var courseId = req.params.courseId;
-    var postId = req.params.postId;
-    var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
-    // Response Object to send back to caller
-    var responseObject = { message: "", data: "" };
-    var thisComment = {};
-
-    // Find COMMENT given courseId + postId + commentId
-    Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
-        .then(function(result_courseObj){
-            thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
-            if( thisComment.upvotedUsers.indexOf(userId) < 0 && thisComment.downvotedUsers.indexOf(userId) < 0 ){
-                thisComment.downvotes += 1;
-                thisComment.downvotedUsers.push(userId);
-                responseObject.message = 'COMMENT downvoted';
-                return result_courseObj.save();
-            }
-            else{
-                responseObject.message = 'You have already voted for the COMMENT';
+            if( updateHonorPoints ){
+                return Users.update(
+                           { _id: thisComment.author },
+                           { $inc: { honour: +1 } }
+                        )
             }
         })
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         }); 
 }
+
 /*
     parameter: courseId, postId, commentId
     body: userId
@@ -345,10 +337,11 @@ exports.resetVote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
     var userId = req.body.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
+    var updateHonorPoints = false;
     var thisComment = {};
 
     // Find COMMENT given courseId + postId + commentId
@@ -359,27 +352,31 @@ exports.resetVote = function(req,res){
                 thisComment.upvotes -= 1;
                 thisComment.upvotedUsers = thisComment.upvotedUsers.filter(function(e){ return e != userId; });
                 responseObject.message = 'Vote for COMMENT is resetted';
-                return result_courseObj.save();
-            }
-            else if( thisComment.downvotedUsers.indexOf(userId) > -1 ){
-                thisComment.downvotes -= 1;
-                thisComment.downvotedUsers = thisComment.downvotedUsers.filter(function(e){ return e != userId; });
-                responseObject.message = 'Vote for COMMENT is resetted';
+                updateHonorPoints = true
                 return result_courseObj.save();
             }
             else{
                 responseObject.message = 'You have not voted for the COMMENT';
+                responseObject.data = thisComment;
+                res.json( responseObject );
             }
         })
         .then(function(){
-            User.findById(thisComment.author).honor -= 1;
+            if( updateHonorPoints ){
+                return Users.update(
+                           { _id: thisComment.author },
+                           { $inc: { honour: -1 } }
+                        )
+            }
         })
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
+            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.send(err);
+            res.status( 500 );
+            res.json({ message: "Something went wrong", err: err });
         });
 }
