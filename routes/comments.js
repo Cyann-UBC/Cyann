@@ -3,6 +3,9 @@
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
 
+var POINTS_AWARDED_FOR_EACH_UPVOTE = 1;
+var POINTS_AWARDED_FOR_EACH_ANSWER = 2;
+
 /*
     parameter: courseId, postId
     usage: Find all comment within a specific post given the courseId + postId
@@ -193,11 +196,12 @@ exports.setAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
     var userId = req.body.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
+    var updateHonorPoints = false;
 
     // Find COMMENT given courseId + postId + commentId
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
@@ -206,10 +210,19 @@ exports.setAsAnswer = function(req,res){
             if( thisComment.isAnswer != true ){
                 thisComment.isAnswer = true;
                 responseObject.message = 'COMMENT flagged as an answer';
+                updateHonorPoints = true;
                 return result_courseObj.save();
             }
             else{
                 responseObject.message = 'COMMENT is already an answer';
+            }
+        })
+        .then(function(){
+            if( updateHonorPoints ){
+                return Users.update(
+                           { _id: thisComment.author },
+                           { $inc: { honour: +POINTS_AWARDED_FOR_EACH_ANSWER } }
+                        )
             }
         })
         // Send back response
@@ -235,11 +248,12 @@ exports.unsetAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
     var userId = req.body.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
+    var updateHonorPoints = false;
 
     // Find COMMENT given courseId + postId + commentId
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
@@ -248,10 +262,19 @@ exports.unsetAsAnswer = function(req,res){
             if( thisComment.isAnswer != false ){
                 thisComment.isAnswer = false;
                 responseObject.message = 'COMMENT unflagged as an answer';
+                updateHonorPoints = true;
                 return result_courseObj.save();
             }
             else{
                 responseObject.message = 'COMMENT is already NOT an answer';
+            }
+        })
+        .then(function(){
+            if( updateHonorPoints ){
+                return Users.update(
+                           { _id: thisComment.author },
+                           { $inc: { honour: -POINTS_AWARDED_FOR_EACH_ANSWER } }
+                        )
             }
         })
         // Send back response
@@ -310,7 +333,7 @@ exports.upvote = function(req,res){
             if( updateHonorPoints ){
                 return Users.update(
                            { _id: thisComment.author },
-                           { $inc: { honour: +1 } }
+                           { $inc: { honour: +POINTS_AWARDED_FOR_EACH_UPVOTE } }
                         )
             }
         })
@@ -365,7 +388,7 @@ exports.resetVote = function(req,res){
             if( updateHonorPoints ){
                 return Users.update(
                            { _id: thisComment.author },
-                           { $inc: { honour: -1 } }
+                           { $inc: { honour: -POINTS_AWARDED_FOR_EACH_UPVOTE } }
                         )
             }
         })
