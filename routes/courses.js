@@ -73,3 +73,21 @@ exports.updateById = function(req,res){
             res.send(err);
         });
 };
+
+exports.addUser = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            for (var i = 0; i < result.users.length; i++) {
+                if (result.users[i] == req.user.userId)
+                    return result;
+            }
+            result.users.push(req.user.userId);
+            return result.save();
+        })
+        .then(function (result){
+            res.json({ data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
+};
