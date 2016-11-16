@@ -14,7 +14,12 @@ exports.findAll = function(req,res){
 
 //Convert a userId to a name
 exports.findById = function(req,res){
-    res.json({ data: req.user });
+    Users.findById({"_id": req.params.userId})
+                .then (function (user){
+                    res.json({ userInfo: user });
+                }).catch(function(err){
+                    res.send(err);
+                });
 }
 
 //find post by written by a specific user
@@ -57,3 +62,11 @@ exports.findCommentById = function(req,res){
         res.send(err)
     });
 }
+
+// Users.findById({"_id": req.user.userId})
+//                 .then (function (user){
+//                     res.json({ userInfo: user});
+//                 }).catch(function(err){
+//                     res.send(err);
+//                 });
+

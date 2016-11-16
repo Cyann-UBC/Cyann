@@ -7,7 +7,9 @@ var db = mongoose.createConnection('mongodb://localhost:27017/userCollection');
     db.once("open",function(){ console.log("MongoDB [userCollection] connected successfully"); });
 
 var UserSchema = new mongoose.Schema({
-    "facebookId": {type: String, unique: true, required: true},
+    "facebookId": { type: String, unique: true, required: true },
+    "email": { type: String },
+    "profileImg": { type: String },
     "name": { type: String, required: true },
     "userType": { type: String, required: true },
     "honour": { type: Number, default: 0 },

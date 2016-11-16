@@ -8,7 +8,7 @@ exports.findAll = function(req,res){
         .populate("instructor", "name", Users)
         .populate("TAs", "name", Users)
         .then(function (result){
-            res.json({ message: "Retrieved all courses!", data: result });
+            res.json({ message: "Retrieved all courses!", data: result});
         }).catch(function(err){
             res.send(err);
         });

@@ -21,8 +21,8 @@ var request = require('request');
 
 exports.register = function(req,res){
 
-    if( !req.body.name || !req.body.userType ) {
-        var err = new Error ('Name and userType required!');
+    if( !req.body.userType ) {
+        var err = new Error ('userType required!');
         err.status = 400;
         res.json(err);
     }
@@ -35,9 +35,11 @@ exports.register = function(req,res){
             .then(  function(result) {
                 if (result.length == 0) {
                     var newUser =   { 
-                                        name: req.body.name,
+                                        name: profile.name,
                                         userType: req.body.userType,
-                                        facebookId: profile.id
+                                        facebookId: profile.id,
+                                        email: profile.email
+                                        //profileImg: profile.picture
                                     };
                     return Users.create(newUser);
                 }
@@ -49,7 +51,7 @@ exports.register = function(req,res){
                                     userId: user._id    
                                     }, 'CPEN321_CYANN');
 
-                res.json(token);
+                res.json({token: token, fbprofile: profile});
             })
             .catch(function(err){
                 res.send(err);
