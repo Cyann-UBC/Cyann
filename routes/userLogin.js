@@ -38,8 +38,8 @@ exports.register = function(req,res){
                                         name: profile.name,
                                         userType: req.body.userType,
                                         facebookId: profile.id,
-                                        email: profile.email
-                                        //profileImg: profile.picture
+                                        email: req.body.email,
+                                        profileImg: req.body.profileImg
                                     };
                     return Users.create(newUser);
                 }
@@ -51,7 +51,7 @@ exports.register = function(req,res){
                                     userId: user._id    
                                     }, 'CPEN321_CYANN');
 
-                res.json({token: token, fbprofile: profile});
+                res.json(token);
             })
             .catch(function(err){
                 res.send(err);
