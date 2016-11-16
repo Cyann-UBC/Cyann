@@ -3,7 +3,6 @@ var Users = require('../models/user.js');
 var jwt = require('jsonwebtoken');
 var request = require('request');
 
-
 exports.login = function(req,res,next){
     var checkUser = function (error,user) {
         if(error || !user){
@@ -26,37 +25,38 @@ exports.register = function(req,res){
         err.status = 400;
         res.json(err);
     }
+
     // Grab the social network and token
     var socialToken = req.body.socialToken;
 
     // Validate the social token with Facebook
-    validateWithProvider(socialToken).then(function (profile) {
-        Users.find({ facebookId: profile.id })
-            .then(  function(result) {
-                if (result.length == 0) {
-                    var newUser =   { 
-                                        name: req.body.name,
-                                        userType: req.body.userType,
-                                        facebookId: profile.id
-                                    };
-                    return Users.create(newUser);
-                }
+    validateWithProvider(socialToken)
+        .catch(function (err) {
+            res.send('Failed!' + err.message);
+        })
+        .then(function (profile) {
+            return Users.find({ facebookId: profile.id })
+        })
+        .then(function(result) {
+            if (result.length == 0) {
+                var newUser =   { 
+                                    name: req.body.name,
+                                    userType: req.body.userType,
+                                    facebookId: profile.id
+                                };
+                return Users.create(newUser);
+            }
+            else{
                 return result[0];
-            })
-            .then(function(user){
-                var token = jwt.sign({   
-                                    facebookId: profile.id,
-                                    userId: user._id    
-                                    }, 'CPEN321_CYANN');
-
-                res.json({jwt: token});
-            })
-            .catch(function(err){
-                res.send(err);
-            });
-    }).catch(function (err) {
-        res.send('Failed!' + err.message);
-    });
+            }
+        })
+        .then(function(user){
+            var token = jwt.sign({ facebookId: user.facebookId, userId: user._id }, 'CPEN321_CYANN');
+            res.json({jwt: token});
+        })
+        .catch(function(err){
+            res.send(err);
+        });
 }
 
 function validateWithProvider(socialToken) {
