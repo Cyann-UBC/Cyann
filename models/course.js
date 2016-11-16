@@ -33,7 +33,7 @@ var PostSchema = new mongoose.Schema({
 
 var CourseSchema = new mongoose.Schema({
     "courseName": { type: String, unique: true, required: true, trim: true },
-    "instructor": { type: mongoose.Schema.ObjectId, ref: "User" },
+    "instructor": [{ type: mongoose.Schema.ObjectId, ref: "User" }],
     "TAs": [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
     "users": [{ type: mongoose.Schema.Types.ObjectId,  ref: "User" }],
     "posts": [PostSchema]
