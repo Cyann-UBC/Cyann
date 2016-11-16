@@ -22,12 +22,17 @@ exports.findById = function(req,res){
 exports.findPostById = function(req,res){
 
     var userId = req.params.userId;
-    var postIdArray = [];
-
-    // res.json('ko');
-    Courses.aggregate(  [   { $match: {'posts.author': mongoose.Types.ObjectId("582bdb49b90ca49e03d159c7")} },
-                            { $unwind: '$posts' },
-                            { $project: { 'posts._id': 1, 'posts.title': 1, 'posts.content': 1, 'posts.author': 1, 'posts.course': 1, 'posts.updatedAt': 1, 'posts.createdAt': 1, _id: 0 } }
+    Courses.aggregate(  [   {  $match: {'posts.author': mongoose.Types.ObjectId(userId)} },
+                            {  $unwind: '$posts' },
+                            { $project: {   _id: 0,
+                                            'courseId': '$_id',
+                                            'postId': '$posts._id', 
+                                            'title': '$posts.title', 
+                                            'content': '$posts.content', 
+                                            'author': '$posts.author', 
+                                            'course': '$posts.course', 
+                                            'updatedAt': '$posts.updatedAt', 
+                                            'createdAt': '$posts.createdAt' } }
                         ], function(err, aggregateResult) {
                             if (err) {
                                 res.status(400);
@@ -38,6 +43,7 @@ exports.findPostById = function(req,res){
                                 res.json(aggregateResult);
                         }
     });
+
     // // Alternative (UGLY) solution
     // Users.findOne({ _id: userId})
     //     .then(function(userObject){
