@@ -24,26 +24,9 @@ var app = express();
 app.use(morgan('dev'));                                 // Log every request to the console{}
 app.use(bodyParser.json());                             // Parse application/json
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
-app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['/api/users/register'] }));
+app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['/api/users/register'] })); //jwt verification middleware.
 // app.use(multer({ dest: './uploads/'}))               // Store file in /uploads directory
 
-app.use(function (req, res, next) {
-    var jwtString = (req.get('Authorization').split(" ")[1]);
-    //res.json(jwtString);
-    try {
-    	console.log(jwt.verify(jwtString, 'CPEN321_CYANN'));
-        //req.userId = CyannProfile.userId;
-        return next();
-    } catch (err) {
-        res.send('???');
-        res.status(400);
-        
-        // error
-    }
-});
-// function verifyJwt(jwtString) {
-//     return jwt.verify(jwtString, 'CPEN321_CYANN');
-// }
 
 require('./routes')(app)
 

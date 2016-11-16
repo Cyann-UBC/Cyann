@@ -57,7 +57,7 @@ module.exports = function(app){
     // USER AUTHENTICATION ROUTES
     //---------------------------------------
     var userLogin = require('./userLogin');
-    app.post("/api/users/login", userLogin.login);
+    //app.post("/api/users/login", userLogin.login);
     app.post("/api/users/register", userLogin.register);
 
     //---------------------------------------

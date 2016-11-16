@@ -4,20 +4,20 @@ var jwt = require('jsonwebtoken');
 var request = require('request');
 
 
-exports.login = function(req,res,next){
-    var checkUser = function (error,user) {
-        if(error || !user){
-            res.json({ "response": "Wrong username or password" });
-        }else{
-            res.json({ "response": "success" });
-        }
-    }
-    if(req.body.username && req.body.password){
-        User.authenticate(req.body.username, req.body.password,checkUser);
-    }else{
-        res.json({ "response": "Please provide username and password" });
-    }
-}
+// exports.login = function(req,res,next){
+//     var checkUser = function (error,user) {
+//         if(error || !user){
+//             res.json({ "response": "Wrong username or password" });
+//         }else{
+//             res.json({ "response": "success" });
+//         }
+//     }
+//     if(req.body.username && req.body.password){
+//         User.authenticate(req.body.username, req.body.password,checkUser);
+//     }else{
+//         res.json({ "response": "Please provide username and password" });
+//     }
+// }
 
 exports.register = function(req,res){
 
@@ -49,7 +49,7 @@ exports.register = function(req,res){
                                     userId: user._id    
                                     }, 'CPEN321_CYANN');
 
-                res.json({jwt: token});
+                res.json(token);
             })
             .catch(function(err){
                 res.send(err);
