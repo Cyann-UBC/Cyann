@@ -26,6 +26,25 @@ app.use(bodyParser.json());                             // Parse application/jso
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
 app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['/api/users/register'] }));
 // app.use(multer({ dest: './uploads/'}))               // Store file in /uploads directory
+
+app.use(function (req, res, next) {
+    var jwtString = (req.get('Authorization').split(" ")[1]);
+    //res.json(jwtString);
+    try {
+    	console.log(jwt.verify(jwtString, 'CPEN321_CYANN'));
+        //req.userId = CyannProfile.userId;
+        return next();
+    } catch (err) {
+        res.send('???');
+        res.status(400);
+        
+        // error
+    }
+});
+// function verifyJwt(jwtString) {
+//     return jwt.verify(jwtString, 'CPEN321_CYANN');
+// }
+
 require('./routes')(app)
 
 //----------------------------------------
@@ -49,24 +68,23 @@ app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPat
 //----------------------------------------
 // USER AUTHENTICATION
 //----------------------------------------
-app.use(function (req, res) {
-    //var jwtString = req.query.jwt;
-    res.json(req.header);
-    try {
-        var CyannProfile = verifyJwt(jwtString);
-        req.userId = CyannProfile.userId;
-        return next();
-    } catch (err) {
-        res.send('Invalid JWT');
-        res.status(400);
-        // error
-    }
-});
-function verifyJwt(jwtString) {
-    return jwt.verify(jwtString, 'CPEN321_CYANN', {
-        issuer: 'CYANN'
-    });
-}
+// app.use(function (req, res) {
+//     jwtString = req.get('Authorization');
+//     try {
+//         var CyannProfile = verifyJwt(jwtString);
+//         req.userId = CyannProfile.userId;
+//         return next();
+//     } catch (err) {
+//         res.send('Invalid JWT');
+//         res.status(400);
+//         // error
+//     }
+// });
+// function verifyJwt(jwtString) {
+//     return jwt.verify(jwtString, 'CPEN321_CYANN', {
+//         issuer: 'CYANN'
+//     });
+// }
 
 
 //----------------------------------------

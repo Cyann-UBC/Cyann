@@ -44,12 +44,12 @@ exports.register = function(req,res){
                 return result[0];
             })
             .then(function(user){
-                res.json(jwt.sign({   
-                                    profileId: profile.id,
+                var token = jwt.sign({   
+                                    facebookId: profile.id,
                                     userId: user._id    
-                                    }, 'CPEN321_CYANN', {
-                                        issuer: 'CYANN'
-                                    }));
+                                    }, 'CPEN321_CYANN');
+
+                res.json({jwt: token});
             })
             .catch(function(err){
                 res.send(err);
@@ -70,7 +70,7 @@ function validateWithProvider(socialToken) {
                 if (!error && response.statusCode == 200) {
                     resolve(JSON.parse(body));
                 } else {
-                    reject(err);
+                    reject(error);
                 }
             }
         );
