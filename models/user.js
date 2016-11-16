@@ -8,8 +8,8 @@ var db = mongoose.createConnection('mongodb://localhost:27017/userCollection');
 
 var UserSchema = new mongoose.Schema({
     "facebookId": { type: String, unique: true, required: true },
-    "email": { type: String },
-    "profileImg": { type: String },
+    "email": { type: String, unique: true},
+    "profileImg": { type: String, default: 'http://clipartix.com/wp-content/uploads/2016/05/Smiley-face-free-happy-face-clipart-clipartgo-4.jpg' },
     "name": { type: String, required: true },
     "userType": { type: String, required: true },
     "honour": { type: Number, default: 0 },
