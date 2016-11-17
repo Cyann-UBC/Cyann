@@ -70,6 +70,12 @@ module.exports = function(app){
     app.get("/api/users/:userId/posts", userInfo.findPostById)
     app.get("/api/users/:userId/comments", userInfo.findCommentById)
 
+    //---------------------------------------
+    // SEARCH ROUTES
+    //---------------------------------------
+    var search = require('./search.js');
+    app.get("/api/courses/:courseId/search", search.searchPosts );
+
     // //---------------------------------------
     // // FILE UPLOAD ROUTES
     // //---------------------------------------
