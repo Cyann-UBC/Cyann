@@ -10,14 +10,14 @@ module.exports = function(app){
     app.param('postId', handler.handlePostId);
     app.param('commentId', handler.handleCommentId);
     app.param('userId', handler.handleUserId);
-    
+
     //---------------------------------------
     // HONOR SYSTEM ROUTES
     //---------------------------------------
     var honor = require('./honor');
     app.get("/api/honor/:userId", honor.getHonorPointsByUserId);
     //app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
-    
+
     //---------------------------------------
     // COURSES ROUTES
     //---------------------------------------
@@ -73,16 +73,16 @@ module.exports = function(app){
     // //---------------------------------------
     // // FILE UPLOAD ROUTES
     // //---------------------------------------
-    // //Save global file to file system
-    // //Uses multer
-    // //Might be deprecated in the future
-    // var fileUpload = require("./fileUpload");
-    // var multer  = require('multer');
-    // var upload = multer({storage: fileUpload.storage, dest: './uploads'});
-    // var type = upload.single('attachment');
-    // app.post("/api/:courseId/files/upload",type, fileUpload.upload);
-    // app.get("/api/:courseId/files/download/:fileName", fileUpload.download);
-    // app.get("/api/:courseId/files/", fileUpload.showFiles)
+    //Save global file to file system
+    //Uses multer
+    var fileUpload = require("./fileUpload");
+    var multer  = require('multer');
+    var upload = multer({storage: fileUpload.storage, dest: './uploads'});
+    var type = upload.single('attachment');
+    app.post("/api/:courseId/files/:type/upload",type, fileUpload.upload);
+    app.get("/api/:courseId/files/:type/download/:fileName", fileUpload.download);
+    app.get("/api/:courseId/files/:type", fileUpload.showFiles);
+    app.delete("/api/:courseId/files/:type/:fileName",fileUpload.deleteFile);
     // //Save file for individual as attachment
     // //Uses formidable, gridfs, fs
 }
