@@ -48,7 +48,8 @@ exports.register = function(req,res){
             .then(function(user){
                 var token = jwt.sign({   
                                     facebookId: profile.id,
-                                    userId: user._id    
+                                    userId: user._id,
+                                    userType: user.userType    
                                     }, 'CPEN321_CYANN');
 
                 res.json(token);
