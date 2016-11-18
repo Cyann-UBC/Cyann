@@ -16,9 +16,7 @@ var CommentSchema = new mongoose.Schema({
     "updatedAt": { type: Date, default: Date.now },
     "isAnswer": { type: Boolean, default: false },
     "upvotes": { type: Number, default: 0 },
-    "downvotes": { type: Number, default: 0 },
-    "upvotedUsers":{ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}], select: false },   // Private fields...
-    "downvotedUsers":{ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}], select: false }, // Private fields...
+    "upvotedUsers":{ type: [{ type: mongoose.Schema.Types.ObjectId, ref: "User"}] },   // Private fields...
 });
 
 var PostSchema = new mongoose.Schema({

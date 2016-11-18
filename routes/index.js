@@ -51,7 +51,6 @@ module.exports = function(app){
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/setAsAnswer",comments.setAsAnswer);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/unsetAsAnswer",comments.unsetAsAnswer);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/upvote",comments.upvote);
-    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/downvote",comments.downvote);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/resetVote",comments.resetVote);
 
     //---------------------------------------
