@@ -15,7 +15,12 @@ exports.findAll = function(req,res){
 
 //Convert a userId to a name
 exports.findById = function(req,res){
-    res.json({ data: req.user });
+    Users.findById({"_id": req.params.userId})
+                .then (function (user){
+                    res.json({ userInfo: user });
+                }).catch(function(err){
+                    res.send(err);
+                });
 }
 
 //find post by written by a specific user
@@ -51,7 +56,6 @@ exports.findPostById = function(req,res){
 }
 
 exports.findCommentById = function(req,res){
-
     var userId = req.params.userId;
     Courses.aggregate()
         .match({ 'posts.comments.author': mongoose.Types.ObjectId(userId) })
