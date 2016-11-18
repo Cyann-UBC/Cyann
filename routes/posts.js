@@ -45,7 +45,8 @@ exports.createPostsByCourseId = function(req,res){
                    'author': userId,
                    'course': courseId};
     var newPostId = null;
-// 58122f3e6a5f670b42b5f85b
+
+    var emailList = [];
     //Create new post and get its postId
     var newPostObj = req.course.posts.create(newPost);
     req.course.posts.push(newPostObj);
@@ -54,7 +55,7 @@ exports.createPostsByCourseId = function(req,res){
     req.course.save()
     .then(function(){
     //Find the user by userId
-      return User.findById(userId)
+      return Users.findById(userId)
     })
     .then(function(user){
     //Push the postId to the user's POST collection
@@ -62,20 +63,27 @@ exports.createPostsByCourseId = function(req,res){
       return user.save();
     })
     .then(function(user){
-      if(user.userType == 'Instructor'){
+      if(user.userType === 'Instructor'){
+        Courses.findById(req.params.courseId)
+        .populate({ path: 'users', model: Users })
+        .then(function(course){
+          for(var i = 0; i< course.users.length; i++){
+            emailList = emailList.concat(course.users[0].email)
+          }
+        })
+        .then(function(){
         var smtpTransport = nodemailer.createTransport("SMTP",{
             service: "hotmail",
             auth: {
-                user: "howard12345678987654321@hotmail.com",
+                user: "howard12345678987654321@hotmail.com", //this needs to be changed
                 pass: '***!'
             }
         });
         var mailOptions={
-                to : 'dvhowardzhou@gmail.com',
-                subject : "testing",
-                text : "testing"
+                to : emailList,
+                subject : req.body.title,
+                text : req.body.content
             }
-            console.log(mailOptions);
             smtpTransport.sendMail(mailOptions, function(error, response){
              if(error){
                     console.log(error);
@@ -84,7 +92,8 @@ exports.createPostsByCourseId = function(req,res){
                     console.log("Message sent: " + response.message);
                 res.json({message:'posted created and email sent'});
                  }
-        });
+              });
+        })
       }
       else{
         res.json({message:"post created and user updated, no email sent", user:user})
