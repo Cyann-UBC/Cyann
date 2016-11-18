@@ -17,17 +17,6 @@ exports.upload = function(req,res){
               path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
               size: 277056 }
 	 */
-	 var type = req.params.type
-	 var courseName = req.course.courseName
-	 var filename = req.file.originalname
-	 var newFileDescription = {
-		 [filename]:req.body.description
-	 }
-
-	 fs.writeFile(__dirname+'/..'+'/uploads/'+courseName+'/'+type+'/'+type+'.json',JSON.stringify(newFileDescription),'utf8', function (err) {
-	  if (err) return console.log(err);
-	  console.log(newFileDescription);
-	});
 	res.status(204).end();
 };
 
