@@ -46,7 +46,7 @@ exports.findById = function(req,res){
             res.json({ message: "Course Found!", data: result });
         }).catch(function(err){
             res.send(err);
-        });aa
+        });
 }
 
 // CREATE COURSE

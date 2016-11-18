@@ -4,7 +4,7 @@ NodeJS + MongoDB backend used for providing API endpoints for **Cyann** Mobile &
 
 ## Install
 
-Clone this repo to your local machine & install all the dependencies.
+Clone this repo to your local machine & install all the dependencies. (Make sure you have NodeJS, NPM & MongoDB installed on your local machine)
 ```
 $ git clone https://github.com/Howard-Zhou/Cyann.git
 $ cd ./Cyann

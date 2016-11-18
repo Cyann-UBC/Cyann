@@ -51,7 +51,6 @@ module.exports = function(app){
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/setAsAnswer",comments.setAsAnswer);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/unsetAsAnswer",comments.unsetAsAnswer);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/upvote",comments.upvote);
-    app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/downvote",comments.downvote);
     app.put("/api/courses/:courseId/posts/:postId/comments/:commentId/resetVote",comments.resetVote);
 
     //---------------------------------------
@@ -69,6 +68,12 @@ module.exports = function(app){
     app.get("/api/users/:userId", userInfo.findById)
     app.get("/api/users/:userId/posts", userInfo.findPostById)
     app.get("/api/users/:userId/comments", userInfo.findCommentById)
+
+    //---------------------------------------
+    // SEARCH ROUTES
+    //---------------------------------------
+    var search = require('./search.js');
+    app.get("/api/courses/:courseId/search", search.searchPosts );
 
     // //---------------------------------------
     // // FILE UPLOAD ROUTES
