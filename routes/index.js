@@ -16,14 +16,19 @@ module.exports = function(app){
     //---------------------------------------
     var honor = require('./honor');
     app.get("/api/honor/:userId", honor.getHonorPointsByUserId);
+<<<<<<< HEAD
     //app.put("/api/honor/:userId", honor.addHonorPointsByUserId);
 
+=======
+    
+>>>>>>> eb6e63154c35eddba4427bbe900205b0e191be31
     //---------------------------------------
     // COURSES ROUTES
     //---------------------------------------
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
-    //app.get("/api/courses/:courseName", courses.findByName)
+    app.get("/api/courses/users/:courseId", courses.findAllUsers);
+    app.put("/api/courses/addUser/:courseId", courses.addUser);
     app.get("/api/courses/:courseId", courses.findById);
     app.post("/api/courses", courses.create);
     app.put("/api/courses/:courseId", courses.updateById);
@@ -57,8 +62,8 @@ module.exports = function(app){
     // USER AUTHENTICATION ROUTES
     //---------------------------------------
     var userLogin = require('./userLogin');
-    app.post("/api/users/login", userLogin.login);
-    app.post("/api/users/register",userLogin.signUp);
+    //app.post("/api/users/login", userLogin.login);
+    app.post("/api/users/register", userLogin.register);
 
     //---------------------------------------
     // USER INFO ROUTES
