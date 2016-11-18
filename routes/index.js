@@ -22,6 +22,7 @@ module.exports = function(app){
     //---------------------------------------
     var courses = require('./courses');
     app.get("/api/courses", courses.findAll);
+    app.get("/api/courses/users/:courseId", courses.findAllUsers);
     app.put("/api/courses/addUser/:courseId", courses.addUser);
     app.get("/api/courses/:courseId", courses.findById);
     app.post("/api/courses", courses.create);

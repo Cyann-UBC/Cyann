@@ -14,6 +14,17 @@ exports.findAll = function(req,res){
         });
 }
 
+exports.findAllUsers = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            var users = result.users;
+            res.json(users);
+        }).catch(function(err){
+            res.send(err);
+        });
+}
+
 //Convert a courseName to courseId
 exports.findByName = function(req,res){
     Courses.findOne({"courseName": req.params.courseName})
