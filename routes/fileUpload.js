@@ -17,15 +17,15 @@ exports.upload = function(req,res){
               path: 'uploads/436ec561793aa4dc475a88e84776b1b9',
               size: 277056 }
 	 */
-	res.status(204).end();
+	res.json({message:'file uploaded'});
 };
 
 //Get a list of files inside a specific course directory
 exports.showFiles = function(req,res){
 	var filePath = "/uploads/" + req.course.courseName + '/' + req.params.type
 	var filesList = []
-	console.log(req.course.courseName)
-	console.log(__dirname + "/.." + filePath)
+//	console.log(req.course.courseName)
+//	console.log(__dirname + "/.." + filePath)
 	fs.readdir(path.join(__dirname + "/.." + filePath), function(err, files) {
 	    if (err) return;
 			res.json({files:files})
