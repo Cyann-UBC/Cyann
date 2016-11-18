@@ -1,7 +1,6 @@
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
 var fs = require('fs');
-var fse = require('node-fs-extra');
 
 //Find all post
 exports.findAll = function(req,res){
