@@ -12,8 +12,6 @@ var UserSchema = new mongoose.Schema({
     "name": { type: String, required: true },
     "userType": { type: String, required: true },
     "honour": { type: Number, default: 0 },
-    "joined": { type: Date, default: Date.now , select: false},
-    "posts": [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course.posts' }],
-    "comments": [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course.posts.comments '}]
+    "joined": { type: Date, default: Date.now , select: false}
 });
 module.exports = db.model('User', UserSchema);
