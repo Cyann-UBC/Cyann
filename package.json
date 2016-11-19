@@ -1,22 +1,29 @@
 {
-  "name": "PROJECT_QnAFORUMS",
+  "name": "Cyann-Backend",
   "version": "1.0.0",
-  "description": "Proof of Concept for API server of a Q&A Forum",
+  "description": "Q&A Forum",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Cyann",
+  "author": "CPEN321 Cyann Group",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^0.8.7",
     "body-parser": "^1.13.3",
     "express": "^4.13.3",
+    "express-jwt": "^5.1.0",
+    "jsonwebtoken": "^7.1.9",
     "mongodb": "^2.2.10",
     "mongoose": "^4.1.2",
     "morgan": "~1.2.2",
     "multer": "^1.2.0",
+<<<<<<< HEAD
     "nodemailer": "^0.7.1",
     "nodemon": "^1.9.2"
+=======
+    "node-fs-extra": "^0.8.1",
+    "nodemon": "^1.9.2",
+    "request": "^2.78.0"
+>>>>>>> e7d9338dcbe91a9c691ffade2f67a7d8ac7ac6df
   }
 }

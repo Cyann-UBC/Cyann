@@ -1,5 +1,6 @@
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
+var fs = require('fs');
 
 //Find all post
 exports.findAll = function(req,res){
@@ -8,7 +9,18 @@ exports.findAll = function(req,res){
         .populate("instructor", "name", Users)
         .populate("TAs", "name", Users)
         .then(function (result){
-            res.json({ message: "Retrieved all courses!", data: result });
+            res.json({ message: "Retrieved all courses!", data: result});
+        }).catch(function(err){
+            res.send(err);
+        });
+}
+
+exports.findAllUsers = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            var users = result.users;
+            res.json(users);
         }).catch(function(err){
             res.send(err);
         });
@@ -35,7 +47,7 @@ exports.findById = function(req,res){
             res.json({ message: "Course Found!", data: result });
         }).catch(function(err){
             res.send(err);
-        });aa
+        });
 }
 
 // CREATE COURSE
@@ -43,15 +55,19 @@ exports.create = function(req,res){
     var newCourse = { courseName: req.body.courseName,
                      instructor: req.body.instructor,
                      TAs: req.body.TAs.split(" ").filter(onlyUnique) };
+    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName)
+    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/readings')
+    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/assignments')
     Courses.create(newCourse)
         .then(function (result){
             res.json({ message: "Course created!", data: result });
-        }).catch(function(err){
+        })
+        .catch(function(err){
             res.send(err);
         });
 };
 // Helper Method for FILTER()
-function onlyUnique(value, index, self) { 
+function onlyUnique(value, index, self) {
     return self.indexOf(value) === index;
 }
 
@@ -59,7 +75,7 @@ exports.updateById = function(req,res){
     var courseId = req.params.courseId;
     Courses.findOne({'_id': courseId})
         .then(function(result){
-            if (req.body.TAs != null) 
+            if (req.body.TAs != null)
                 for (var i = 0; i < req.body.TAs.length; i++)
                     result.TAs.push(req.body.TAs[i]);
             if (req.body.instructor != null)
@@ -69,6 +85,24 @@ exports.updateById = function(req,res){
         })
         .then(function (result){
             res.json({ message: 'Updated course #'+courseName+'', data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
+};
+
+exports.addUser = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            for (var i = 0; i < result.users.length; i++) {
+                if (result.users[i] == req.user.userId)
+                    return result;
+            }
+            result.users.push(req.user.userId);
+            return result.save();
+        })
+        .then(function (result){
+            res.json({ data: result });
         }).catch(function(err){
             res.send(err);
         });
