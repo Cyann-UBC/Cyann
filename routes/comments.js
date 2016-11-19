@@ -70,15 +70,8 @@ exports.create = function(req,res){
             responseObject.message = 'COMMENT created';
             return result_courseObj.save();
         })
-        // Push the newly created comment to USER's document
         .then(function(result_courseObj){
             responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentObj._id);
-            return Users.update(
-                       { _id: userId },
-                       { $push: { comments: newCommentObj._id } }
-                    )
-        })
-        .then(function(){
             res.status( 200 );
             res.json( responseObject ); // return newly created comment
         })

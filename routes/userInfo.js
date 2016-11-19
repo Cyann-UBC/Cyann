@@ -28,8 +28,9 @@ exports.findPostById = function(req,res){
 
     var userId = req.params.userId;
     Courses.aggregate()
-        .match({ 'posts.author': mongoose.Types.ObjectId(userId) })
+        .match({ 'posts.author': mongoose.Types.ObjectId(userId) }) // Filter out courses w/o users's authored post
         .unwind('$posts')
+        .match({ 'posts.author': mongoose.Types.ObjectId(userId) }) // Filter out posts that aren't authored by user
         .project({  
             _id: 0,
             'course': { 
@@ -58,10 +59,10 @@ exports.findPostById = function(req,res){
 exports.findCommentById = function(req,res){
     var userId = req.params.userId;
     Courses.aggregate()
-        .match({ 'posts.comments.author': mongoose.Types.ObjectId(userId) })
+        .match({ 'posts.comments.author': mongoose.Types.ObjectId(userId) })  // Filter out courses w/o users's post
         .unwind('$posts')
         .unwind('$posts.comments')
-        .match({ 'posts.comments.author': mongoose.Types.ObjectId(userId) }) // match again...
+        .match({ 'posts.comments.author': mongoose.Types.ObjectId(userId) }) // Filter out posts that aren't authored by user
         .project({  
             _id: 0,
             '_id': '$posts.comments._id', 

@@ -54,13 +54,8 @@ exports.createPostsByCourseId = function(req,res){
     //Save the course to DB
     req.course.save()
     .then(function(){
-    //Find the user by userId
+      //Find the user by userId
       return Users.findById(userId)
-    })
-    .then(function(user){
-    //Push the postId to the user's POST collection
-      user.posts.push(newPostId)
-      return user.save();
     })
     .then(function(user){
       if(user.userType === 'Instructor'){
