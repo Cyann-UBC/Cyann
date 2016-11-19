@@ -68,6 +68,7 @@ module.exports = function(app){
     app.get("/api/users/:userId", userInfo.findById)
     app.get("/api/users/:userId/posts", userInfo.findPostById)
     app.get("/api/users/:userId/comments", userInfo.findCommentById)
+    app.get("/api/users/:userId/courseData", userInfo.getCourseData)
 
     //---------------------------------------
     // SEARCH ROUTES
