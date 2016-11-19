@@ -1,7 +1,7 @@
 "use strict"
 var mongoose = require("mongoose");
 
-var db = mongoose.createConnection("mongodb://localhost:27017/courseCollection");
+var db = mongoose.createConnection("mongodb://localhost:27017/CyannDatabase");
     db.on("error",function(err){ console.error("MongoDB Connection Failed",err); });
     db.once("open",function(){ console.log("MongoDB [courseCollection] connected successfully"); });
 
@@ -51,4 +51,4 @@ CourseSchema.pre("save",function(next){
 
 // argv[0] == db collection name,
 // argv[1] == mongoose schema to use
-module.exports = db.model("Course", CourseSchema);
+module.exports = db.model("Course", CourseSchema, 'Courses');
