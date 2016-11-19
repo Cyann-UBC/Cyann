@@ -1,5 +1,7 @@
 var Courses = require("../models/course.js");
-var Users = require('../models/user.js')
+var Users = require('../models/user.js');
+var nodemailer = require('nodemailer');
+
 /*
   parameter: courseId
   usage: Retrieved all posts within a specific course given the courseId
@@ -32,25 +34,74 @@ exports.findPostsByCourseIdAndPostId = function(req,res){
          Reference the created post inside the creator's "posts" field
 */
 exports.createPostsByCourseId = function(req,res){
-    var newPost = { "title": req.body.title,
-                    "content": req.body.content,
-                    "author": req.body.author,
-                    "course": req.params.courseId };
-    var newPostObj = null;
 
-    Courses.findById({ "_id": req.params.courseId })
-        .then(function(thisCourse){
-            // Create new post and get its postId
-            newPostObj = thisCourse.posts.create(newPost);
-            thisCourse.posts.push(newPostObj);
-            return thisCourse.save();
+    // PARAMS
+    var courseId = req.params.courseId;
+
+    // BODY (x-www-form-urlencoded)
+    var userId = req.body.userId;
+    var newPost = {'title': req.body.title,
+                   'content': req.body.content,
+                   'author': userId,
+                   'course': courseId};
+    var newPostId = null;
+
+    var emailList = [];
+    //Create new post and get its postId
+    var newPostObj = req.course.posts.create(newPost);
+    req.course.posts.push(newPostObj);
+    newPostId = newPostObj._id;
+    //Save the course to DB
+    req.course.save()
+    .then(function(){
+    //Find the user by userId
+      return Users.findById(userId)
+    })
+    .then(function(user){
+    //Push the postId to the user's POST collection
+      user.posts.push(newPostId)
+      return user.save();
+    })
+    .then(function(user){
+      if(user.userType === 'Instructor'){
+        Courses.findById(req.params.courseId)
+        .populate({ path: 'users', model: Users })
+        .then(function(course){
+          for(var i = 0; i< course.users.length; i++){
+            emailList = emailList.concat(course.users[0].email)
+          }
         })
-        .then(function(thisCourse){
-            res.json({ message: "Retrieved all courses!", data: newPostObj });
-        })
-        .catch(function(err){
-            res.send(err);
+        .then(function(){
+        var smtpTransport = nodemailer.createTransport("SMTP",{
+            service: "hotmail",
+            auth: {
+                user: "howard12345678987654321@hotmail.com", //this needs to be changed
+                pass: '***!'
+            }
         });
+        var mailOptions={
+                to : emailList,
+                subject : req.body.title,
+                text : req.body.content
+            }
+            smtpTransport.sendMail(mailOptions, function(error, response){
+             if(error){
+                    console.log(error);
+                res.end("error");
+             }else{
+                    console.log("Message sent: " + response.message);
+                res.json({message:'posted created and email sent'});
+                 }
+              });
+        })
+      }
+      else{
+        res.json({message:"post created and user updated, no email sent", user:user})
+      }
+    })
+    .catch(function(err){
+      res.send(err)
+    })
 };
 
 /*

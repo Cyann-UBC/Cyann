@@ -1,6 +1,5 @@
 "use strict"
 var mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
 
 var db = mongoose.createConnection('mongodb://localhost:27017/userCollection');
     db.on('error',function(err){ console.error("MongoDB Connection Failed",err); });
@@ -17,5 +16,4 @@ var UserSchema = new mongoose.Schema({
     "posts": [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course.posts' }],
     "comments": [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course.posts.comments '}]
 });
-
 module.exports = db.model('User', UserSchema);
