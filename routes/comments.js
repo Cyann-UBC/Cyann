@@ -46,7 +46,7 @@ exports.create = function(req,res){
     // Extract PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
     var commentContent = req.body.content;
 
     if( !commentContent || commentContent == "" ){        
@@ -92,9 +92,10 @@ exports.updateById = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
+    var userId = req.user.userId;
     // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
     var newCommentContent = req.body.content;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
@@ -138,8 +139,8 @@ exports.deleteById = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
+    var userId = req.user.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
@@ -189,7 +190,7 @@ exports.setAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -241,7 +242,7 @@ exports.unsetAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -293,7 +294,7 @@ exports.upvote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -353,7 +354,7 @@ exports.resetVote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };

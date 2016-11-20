@@ -37,9 +37,8 @@ exports.createPostsByCourseId = function(req,res){
 
     // PARAMS
     var courseId = req.params.courseId;
+    var userId = req.user.userId;
 
-    // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
     var newPost = {'title': req.body.title,
                    'content': req.body.content,
                    'author': userId,
@@ -108,9 +107,9 @@ exports.updatePostsByCourseId = function(req,res){
     //PARAMS
     var courseId = req.params.courseId
     var postId = req.params.postId;
+    var userId = req.user.userId;
 
     //BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
     var newTitle = req.body.title;
     var newContent = req.body.content;
 
@@ -147,9 +146,7 @@ exports.deleteByCourseId = function(req,res){
   //PARAMS
   var courseId = req.params.courseId
   var postId = req.params.postId;
-
-  //BODY (x-www-form-urlencoded)
-  var userId = req.body.userId;
+  var userId = req.user.userId;
 
   var userType = null;
   var authorOfPost = req.post.author;
