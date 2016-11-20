@@ -18,6 +18,7 @@ exports.findAll = function(req,res){
 exports.findAllUsers = function(req,res){
     var courseId = req.params.courseId;
     Courses.findById({'_id': courseId})
+        .populate({path:'users',model:Users})
         .then(function(result){
             var users = result.users;
             res.json(users);
