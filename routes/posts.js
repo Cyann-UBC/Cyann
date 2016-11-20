@@ -151,7 +151,7 @@ exports.deleteByCourseId = function(req,res){
   var userType = null;
   var authorOfPost = req.post.author;
 
-  if(authorOfPost == userId ){
+  if(authorOfPost._id == userId ){
     req.post.remove()
     .then(function(){
       return req.course.save()
