@@ -24,9 +24,9 @@ exports.searchPosts = function(req,res){
 
     Courses.findById({ '_id': req.params.courseId })
         .select("-__v")
-        .populate("instructor", "name", Users)
-        .populate("posts.author", "name", Users)
-        .populate("posts.comments.author", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("posts.author", "name email profileImg userType", Users)
+        .populate("posts.comments.author", "name email profileImg userType", Users)
         .then(function (result){
             var filteredResults = result.posts;
 
