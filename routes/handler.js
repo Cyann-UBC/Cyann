@@ -3,9 +3,9 @@ var Users = require('../models/user.js');
 
 exports.handleCourseId = function(req,res,next,id){
     Courses.findById({ '_id': req.params.courseId })
-        .populate("instructor", "name", Users)
-        .populate("posts.author", "name", Users)
-        .populate("posts.comments.author", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("posts.author", "name email profileImg userType", Users)
+        .populate("posts.comments.author", "name email profileImg userType", Users)
         .then(function (result){
             if(!result){
                 err = new Error("Not Found");

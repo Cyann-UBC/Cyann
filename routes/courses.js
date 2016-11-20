@@ -6,8 +6,8 @@ var fs = require('fs');
 exports.findAll = function(req,res){
     Courses.find()
         .select("-posts -__v")
-        .populate("instructor", "name", Users)
-        .populate("TAs", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("TAs", "name email profileImg userType", Users)
         .then(function (result){
             res.json({ message: "Retrieved all courses!", data: result});
         }).catch(function(err){
@@ -30,7 +30,8 @@ exports.findAllUsers = function(req,res){
 exports.findByName = function(req,res){
     Courses.findOne({"courseName": req.params.courseName})
         .select("-posts -__v")
-        .populate("instructor", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("TAs", "name email profileImg userType", Users)
         .then(function(result){
             res.json({ message: "Course Found!", data: result });
         }).catch(function(err){
@@ -42,7 +43,8 @@ exports.findByName = function(req,res){
 exports.findById = function(req,res){
     Courses.findById({ "_id": req.params.courseId })
         .select("-posts -__v")
-        .populate("instructor", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("TAs", "name email profileImg userType", Users)
         .then(function (result){
             res.json({ message: "Course Found!", data: result });
         }).catch(function(err){
