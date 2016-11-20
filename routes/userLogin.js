@@ -6,19 +6,23 @@ var request = require('request');
 
 exports.register = function(req,res){
 
-    if( !req.body.userType ) {
-        var err = new Error ('userType required!');
+    if( !req.body.userType || !req.body.email || !req.body.profileImg || !req.body.socialToken ) {
+        var err = new Error();
+        err.message = 'Either \'userType\' or \'email\' or \'profileImg\' or \'socialToken\' param is missing';
         err.status = 400;
+        res.status(400);
         res.json(err);
+        return
     }
+
     // Grab the social network and token
     var socialToken = req.body.socialToken;
 
     // Validate the social token with Facebook
     validateWithProvider(socialToken).then(function (profile) {
         Users.find({ facebookId: profile.id })
-            .then(  function(result) {
-                if (result.length == 0) {
+            .then(function(result){
+                if( result.length == 0 ){
                     var newUser =   { 
                                         name: profile.name,
                                         userType: req.body.userType,
@@ -28,7 +32,9 @@ exports.register = function(req,res){
                                     };
                     return Users.create(newUser);
                 }
-                return result[0];
+                else{
+                    return result[0];
+                }
             })
             .then(function(user){
                 var token = jwt.sign({   
@@ -40,10 +46,18 @@ exports.register = function(req,res){
                 res.json(token);
             })
             .catch(function(err){
-                res.send(err);
+                var err = new Error();
+                err.message = 'Something went wrong...';
+                err.status = 500;
+                res.status(500);
+                res.json(err);
             });
     }).catch(function (err) {
-        res.send('Failed!' + err.message);
+        var err = new Error();
+        err.message = 'The Facebook Access Token provided is either invalid or expired';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
     });
 }
 
