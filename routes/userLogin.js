@@ -23,7 +23,7 @@ exports.register = function(req,res){
         Users.find({ facebookId: profile.id })
             .then(function(result){
                 if( result.length == 0 ){
-                    var newUser =   { 
+                    var newUser =   {
                                         name: profile.name,
                                         userType: req.body.userType,
                                         facebookId: profile.id,
@@ -37,13 +37,13 @@ exports.register = function(req,res){
                 }
             })
             .then(function(user){
-                var token = jwt.sign({   
+                var token = jwt.sign({
                                     facebookId: profile.id,
                                     userId: user._id,
-                                    userType: user.userType    
+                                    userType: user.userType
                                     }, 'CPEN321_CYANN');
 
-                res.json(token);
+                res.json({ message :'token assigned', data:{token:token, userId: user._id}});
             })
             .catch(function(err){
                 var err = new Error();
