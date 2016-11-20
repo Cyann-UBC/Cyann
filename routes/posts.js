@@ -122,11 +122,12 @@ exports.updatePostsByCourseId = function(req,res){
     if( newContent )
         updatePost["content"] = newContent;
 
-    if(authorOfPost == userId){
+    if(authorOfPost._id == userId){
       var promise = Courses.update( {'_id': courseId,'posts._id': postId },
                                       { $set : {"posts.$.title":newTitle, "posts.$.content":newContent, "posts.$.updatedAt":new Date()} } );
       promise.then(function (result){
-          res.json({ message: 'Updated post #'+postId+'!', data: result });
+          //send newTitle and newContent back for rendering purpose
+          res.json({ message: 'Updated post #'+postId+'!', data: {title:newTitle, conent:newContent} });
         //  var promise = Users.update({'_id':req.params.userId, ''})
       }).catch(function(err){
           res.send(err);
