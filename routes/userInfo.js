@@ -90,3 +90,59 @@ exports.findCommentById = function(req,res){
             }
         });
 }
+
+//find post by written by a specific user
+exports.getCourseData = function(req,res){
+
+    var userId = req.params.userId;
+
+    // First use "REDACT" operator to filter in courses that user is in
+    Courses.aggregate([{
+            "$redact": {
+                "$cond": [
+                    {
+                        "$setIsSubset": [
+                            [mongoose.Types.ObjectId(userId)],
+                            "$users"
+                        ]
+                    },
+                    "$$KEEP",
+                    "$$PRUNE"
+                ]
+            }
+        }])
+        // "PROJECT" operator to change db query response format
+        .project({
+            'courseName': '$courseName',
+            'instructor': '$instructor',
+            'TAs': '$TAs',
+            'postCount': { $size: '$posts' },
+            'userCount': { $size: '$users' }
+        })
+        .exec(function(err, result){
+            if (err) {
+                res.status(400);
+                res.json(err);
+            }
+            else{
+                return result;
+            }
+        })
+        // Due to how mongoose is designed, we have to make a 2nd query in order to POPULATE after an AGGREGATE
+        .then(function(result2){
+            Users.populate(result2, {path: "TAs instructor", select: "name", model: Users}, function(err, result3){
+                if (err) {
+                    res.status(400);
+                    res.json(err);
+                }
+                else{
+                    res.status(200);
+                    res.json(result3);
+                }
+            });
+        })
+        .catch(function(err){
+            res.status(400);
+            res.json(err);
+        });
+}
