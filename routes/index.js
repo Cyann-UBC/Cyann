@@ -65,10 +65,10 @@ module.exports = function(app){
     //---------------------------------------
     var userInfo = require('./userInfo');
     app.get("/api/users", userInfo.findAll);
-    app.get("/api/users/:userId", userInfo.findById)
-    app.get("/api/users/:userId/posts", userInfo.findPostById)
-    app.get("/api/users/:userId/comments", userInfo.findCommentById)
-    app.get("/api/users/:userId/courseData", userInfo.getCourseData)
+    app.get("/api/users/my", userInfo.findById)
+    app.get("/api/users/my/posts", userInfo.findPostById)
+    app.get("/api/users/my/comments", userInfo.findCommentById)
+    app.get("/api/users/my/courseData", userInfo.getCourseData)
 
     //---------------------------------------
     // SEARCH ROUTES
