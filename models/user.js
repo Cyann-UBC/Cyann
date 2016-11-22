@@ -10,7 +10,7 @@ var UserSchema = new mongoose.Schema({
     "email": { type: String, unique: true},
     "profileImg": { type: String, default: 'http://clipartix.com/wp-content/uploads/2016/05/Smiley-face-free-happy-face-clipart-clipartgo-4.jpg' },
     "name": { type: String, required: true },
-    "userType": { type: String, required: true },
+    "userType": { type: String, required: true, default: 'student' },
     "honour": { type: Number, default: 0 },
     "joined": { type: Date, default: Date.now , select: false}
 });

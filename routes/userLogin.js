@@ -6,9 +6,9 @@ var request = require('request');
 
 exports.register = function(req,res){
 
-    if( !req.body.userType || !req.body.email || !req.body.profileImg || !req.body.socialToken ) {
+    if( !req.body.email || !req.body.profileImg || !req.body.socialToken ) {
         var err = new Error();
-        err.message = 'Either \'userType\' or \'email\' or \'profileImg\' or \'socialToken\' param is missing';
+        err.message = 'Either \'email\' or \'profileImg\' or \'socialToken\' param is missing';
         err.status = 400;
         res.status(400);
         res.json(err);
@@ -25,7 +25,6 @@ exports.register = function(req,res){
                 if( result.length == 0 ){
                     var newUser =   {
                                         name: profile.name,
-                                        userType: req.body.userType,
                                         facebookId: profile.id,
                                         email: req.body.email,
                                         profileImg: req.body.profileImg
@@ -43,7 +42,7 @@ exports.register = function(req,res){
                                     userType: user.userType
                                     }, 'CPEN321_CYANN');
 
-                res.json({ message :'token assigned', data:{token:token, userId: user._id}});
+                res.json({ message :'token assigned', jwt: token, userType: user.userType, userId: user._id });
             })
             .catch(function(err){
                 var err = new Error();
