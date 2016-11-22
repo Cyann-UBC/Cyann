@@ -1,7 +1,7 @@
 "use strict"
 var mongoose = require("mongoose");
 
-var db = mongoose.createConnection("mongodb://localhost:27017/courseCollection");
+var db = mongoose.createConnection("mongodb://localhost:27017/CyannDatabase");
     db.on("error",function(err){ console.error("MongoDB Connection Failed",err); });
     db.once("open",function(){ console.log("MongoDB [courseCollection] connected successfully"); });
 
@@ -37,21 +37,18 @@ var CourseSchema = new mongoose.Schema({
     "posts": [PostSchema]
 });
 
-var sortComments = function(a,b){
-  // "-": "a" will be positioned BEFORE "b"
-  // "0": no change
-  // "+": "a" will be positioned AFTER "b"
-  if(a.upvotes === b.upvotes){
-    return b.updated - a.updated
+var sortPosts = function(a,b){
+  if(a.createdAt < b.createdAt){
+    return a.createdAt < b.createdAt
   }
-  return b.upvotes - a.upvotes;
+  return b.createdAt - a.createdAt
 }
 
-PostSchema.pre("save",function(next){
-    this.comments.sort(sortComments);
-    next()
+CourseSchema.pre("save",function(next){
+  this.posts.sort(sortPosts);
+  next()
 })
 
 // argv[0] == db collection name,
 // argv[1] == mongoose schema to use
-module.exports = db.model("Course", CourseSchema);
+module.exports = db.model("Course", CourseSchema, 'Courses');

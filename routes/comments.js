@@ -46,7 +46,7 @@ exports.create = function(req,res){
     // Extract PARAMS
     var courseId = req.params.courseId;
     var postId = req.params.postId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
     var commentContent = req.body.content;
 
     if( !commentContent || commentContent == "" ){        
@@ -70,15 +70,8 @@ exports.create = function(req,res){
             responseObject.message = 'COMMENT created';
             return result_courseObj.save();
         })
-        // Push the newly created comment to USER's document
         .then(function(result_courseObj){
             responseObject.data = result_courseObj.posts.id(postId).comments.id(newCommentObj._id);
-            return Users.update(
-                       { _id: userId },
-                       { $push: { comments: newCommentObj._id } }
-                    )
-        })
-        .then(function(){
             res.status( 200 );
             res.json( responseObject ); // return newly created comment
         })
@@ -99,9 +92,10 @@ exports.updateById = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
+    var userId = req.user.userId;
     // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
     var newCommentContent = req.body.content;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
@@ -145,8 +139,8 @@ exports.deleteById = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    // BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
+    var userId = req.user.userId;
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
@@ -196,7 +190,7 @@ exports.setAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -248,7 +242,7 @@ exports.unsetAsAnswer = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -300,7 +294,7 @@ exports.upvote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
@@ -360,7 +354,7 @@ exports.resetVote = function(req,res){
     var courseId = req.params.courseId;
     var postId = req.params.postId;
     var commentId = req.params.commentId;
-    var userId = req.body.userId;
+    var userId = req.user.userId;
 
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };

@@ -1,5 +1,7 @@
 var Courses = require("../models/course.js");
-var Users = require('../models/user.js')
+var Users = require('../models/user.js');
+var nodemailer = require('nodemailer');
+
 /*
   parameter: courseId
   usage: Retrieved all posts within a specific course given the courseId
@@ -7,9 +9,9 @@ var Users = require('../models/user.js')
 exports.findPostsByCourseId = function(req,res){
     Courses.findById({ '_id': req.params.courseId })
         .select("-__v")
-        .populate("instructor", "name", Users)
-        .populate("posts.author", "name", Users)
-        .populate("posts.comments.author", "name", Users)
+        .populate("instructor", "name email profileImg userType", Users)
+        .populate("posts.author", "name email profileImg userType", Users)
+        .populate("posts.comments.author", "name email profileImg userType", Users)
         .then(function (result){
             res.json({ message: 'Retrieved All Posts!', data: result.posts });
         }).catch(function(err){
@@ -32,25 +34,68 @@ exports.findPostsByCourseIdAndPostId = function(req,res){
          Reference the created post inside the creator's "posts" field
 */
 exports.createPostsByCourseId = function(req,res){
-    var newPost = { "title": req.body.title,
-                    "content": req.body.content,
-                    "author": req.body.author,
-                    "course": req.params.courseId };
-    var newPostObj = null;
 
-    Courses.findById({ "_id": req.params.courseId })
-        .then(function(thisCourse){
-            // Create new post and get its postId
-            newPostObj = thisCourse.posts.create(newPost);
-            thisCourse.posts.push(newPostObj);
-            return thisCourse.save();
+    // PARAMS
+    var courseId = req.params.courseId;
+    var userId = req.user.userId;
+
+    var newPost = {'title': req.body.title,
+                   'content': req.body.content,
+                   'author': userId,
+                   'course': courseId};
+    var newPostId = null;
+
+    var emailList = [];
+    //Create new post and get its postId
+    var newPostObj = req.course.posts.create(newPost);
+    req.course.posts.push(newPostObj);
+    newPostId = newPostObj._id;
+    //Save the course to DB
+    req.course.save()
+    .then(function(){
+      //Find the user by userId
+      return Users.findById(userId)
+    })
+    .then(function(user){
+      if(user.userType === 'Instructor'){
+        Courses.findById(req.params.courseId)
+        .populate({ path: 'users', model: Users })
+        .then(function(course){
+          for(var i = 0; i< course.users.length; i++){
+            emailList = emailList.concat(course.users[0].email)
+          }
         })
-        .then(function(thisCourse){
-            res.json({ message: "Retrieved all courses!", data: newPostObj });
-        })
-        .catch(function(err){
-            res.send(err);
+        .then(function(){
+        var smtpTransport = nodemailer.createTransport("SMTP",{
+            service: "hotmail",
+            auth: {
+                user: "howard12345678987654321@hotmail.com", //this needs to be changed
+                pass: '***!'
+            }
         });
+        var mailOptions={
+                to : emailList,
+                subject : req.body.title,
+                text : req.body.content
+            }
+            smtpTransport.sendMail(mailOptions, function(error, response){
+             if(error){
+                    console.log(error);
+                res.end("error");
+             }else{
+                    console.log("Message sent: " + response.message);
+                res.json({message:'posted created and email sent'});
+                 }
+              });
+        })
+      }
+      else{
+        res.json({message:"post created and user updated, no email sent", user:user})
+      }
+    })
+    .catch(function(err){
+      res.send(err)
+    })
 };
 
 /*
@@ -62,9 +107,9 @@ exports.updatePostsByCourseId = function(req,res){
     //PARAMS
     var courseId = req.params.courseId
     var postId = req.params.postId;
+    var userId = req.user.userId;
 
     //BODY (x-www-form-urlencoded)
-    var userId = req.body.userId;
     var newTitle = req.body.title;
     var newContent = req.body.content;
 
@@ -76,11 +121,12 @@ exports.updatePostsByCourseId = function(req,res){
     if( newContent )
         updatePost["content"] = newContent;
 
-    if(authorOfPost == userId){
+    if(authorOfPost._id == userId){
       var promise = Courses.update( {'_id': courseId,'posts._id': postId },
                                       { $set : {"posts.$.title":newTitle, "posts.$.content":newContent, "posts.$.updatedAt":new Date()} } );
       promise.then(function (result){
-          res.json({ message: 'Updated post #'+postId+'!', data: result });
+          //send newTitle and newContent back for rendering purpose
+          res.json({ message: 'Updated post #'+postId+'!', data: {title:newTitle, conent:newContent} });
         //  var promise = Users.update({'_id':req.params.userId, ''})
       }).catch(function(err){
           res.send(err);
@@ -100,14 +146,12 @@ exports.deleteByCourseId = function(req,res){
   //PARAMS
   var courseId = req.params.courseId
   var postId = req.params.postId;
-
-  //BODY (x-www-form-urlencoded)
-  var userId = req.body.userId;
+  var userId = req.user.userId;
 
   var userType = null;
   var authorOfPost = req.post.author;
 
-  if(authorOfPost == userId ){
+  if(authorOfPost._id == userId ){
     req.post.remove()
     .then(function(){
       return req.course.save()
