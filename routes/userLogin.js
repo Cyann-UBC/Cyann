@@ -6,11 +6,6 @@ var request = require('request');
 
 exports.register = function(req,res){
 
-    if( !req.body.userType ) {
-        var err = new Error ('userType required!');
-        err.status = 400;
-        res.json(err);
-    }
     // Grab the social network and token
     var socialToken = req.body.socialToken;
 
@@ -21,7 +16,6 @@ exports.register = function(req,res){
                 if (result.length == 0) {
                     var newUser =   { 
                                         name: profile.name,
-                                        userType: req.body.userType,
                                         facebookId: profile.id,
                                         email: req.body.email,
                                         profileImg: req.body.profileImg
@@ -37,7 +31,7 @@ exports.register = function(req,res){
                                     userType: user.userType    
                                     }, 'CPEN321_CYANN');
 
-                res.json(token);
+                res.json({ jwt: token, userType: user.userType });
             })
             .catch(function(err){
                 res.send(err);
