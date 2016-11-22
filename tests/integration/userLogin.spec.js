@@ -6,6 +6,7 @@ var app = require('./../../server.js').app;
 const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/fixtures-user.js');
 
 before(clearUsers);
+after(clearUsers);
 
 describe("[API ROUTE] /api/users/register", () => {
 
