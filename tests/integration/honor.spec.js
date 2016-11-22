@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken');
 var app = require('./../../server.js').app;
 const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/fixtures-user.js');
 
-before(populateUsers);
-after(clearUsers);
 
 describe("[API ROUTE] /api/honor/:userId", () => {
+  before(populateUsers);
+  after(clearUsers);
 
   it('should return UNAUTHORIZED error (missing JWT)', (done) => {
     request(app)

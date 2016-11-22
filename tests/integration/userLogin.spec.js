@@ -5,10 +5,9 @@ const jwt = require('jsonwebtoken');
 var app = require('./../../server.js').app;
 const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/fixtures-user.js');
 
-before(clearUsers);
-after(clearUsers);
-
 describe("[API ROUTE] /api/users/register", () => {
+  before(clearUsers);
+  after(clearUsers);
 
   var email = users[0].email, 
       // userType = users[0].userType, 
