@@ -11,7 +11,7 @@ var UserSchema = new mongoose.Schema({
     "profileImg": { type: String, unique: true, required: true },
     "name": { type: String, required: true },
     "userType": { type: String, required: true, default: 'student' },
-    "honour": { type: Number, default: 0 },
+    "honor": { type: Number, default: 0 },
     "joined": { type: Date, default: Date.now , select: false}
 });
 module.exports = db.model('User', UserSchema, 'Users');

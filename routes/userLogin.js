@@ -41,7 +41,6 @@ exports.register = function(req,res){
                                     userId: user._id,
                                     userType: user.userType
                                     }, 'CPEN321_CYANN');
-
                 res.json({ message :'token assigned', jwt: token, userType: user.userType, userId: user._id });
             })
             .catch(function(err){
