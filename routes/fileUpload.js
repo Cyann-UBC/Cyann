@@ -31,14 +31,6 @@ exports.upload = function(req,res){
 
 //Get a list of files inside a specific course directory
 exports.showFiles = function(req,res){
-	if( req.user.userType != "instructor" ) {
-        var err = new Error();
-        err.message = 'Access denied!';
-        err.status = 400;
-        res.status(400);
-        res.json(err);
-        return;
-    }
 
 	var filePath = "/uploads/" + req.course.courseName + '/' + req.params.type
 	var filesList = []
@@ -76,7 +68,7 @@ exports.deleteFile = function(req,res){
         res.json(err);
         return;
     }
-    
+
 	var type = req.params.type
 	var filePath = '/uploads/' + req.course.courseName + "/" + type + '/' +req.params.fileName
 	//console.log(path.join(__dirname + "/.." + filePath))
