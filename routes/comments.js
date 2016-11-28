@@ -159,14 +159,14 @@ exports.deleteById = function(req,res){
             }
         })
         // Find USER given userId
-        .then(function(){
-            return Users.findOne({ '_id': userId });
-        })
-        // Update USER's most recent COMMENT by removing commentId
-        .then(function(result_userObj){
-            result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
-            return result_userObj.save();
-        })
+        // .then(function(){
+        //     return Users.findOne({ '_id': userId });
+        // })
+        // // Update USER's most recent COMMENT by removing commentId
+        // .then(function(result_userObj){
+        //     result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
+        //     return result_userObj.save();
+        // })
         // Send back response
         .then(function(result_userObj){
             responseObject.data = result_userObj;
