@@ -3,7 +3,7 @@ var mongoose = require('mongoose');
 
 var db = mongoose.createConnection('mongodb://localhost:27017/CyannDatabase');
     db.on('error',function(err){ console.error("MongoDB Connection Failed",err); });
-    db.once("open",function(){ console.log("MongoDB [userCollection] connected successfully"); });
+    // db.once("open",function(){ console.log("MongoDB [userCollection] connected successfully"); });
 
 var UserSchema = new mongoose.Schema({
     "facebookId": { type: String, unique: true, required: true },

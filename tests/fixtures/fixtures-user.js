@@ -12,7 +12,7 @@ const users = [
     facebookId: "103837213438033",
     userType: "student",
     email: "justin_btggsjf_toh@tfbnw.net",
-    socialToken: "EAASQ43P93LgBAKOasTdksx4SLTfSOKnjhYMQlyy5wmGxxdw71QqzVaDDNUr9F1y1C9UJy3mT4jgX5NxQqbM7l5RvPcwOEHbQGLjFWQTDRAT6IoGK0kKpwYNFo9II71m7Ghuo4aIi5YOV1CsFRvHZCY41iaRtJl4UQKBdWm7qjoX3V34pL",
+    socialToken: "EAASQ43P93LgBAPdh0rO3C8ROu9FRDgj7lhGCf0PN52UUaAohJWecHSCZBkAvEWXGHLRQxVG26Khot3AS70Ws6tW1yzMvoEJhqkVNk3n3tu3ZBB9X53kcy89QKxLVCR6c7v2mG0lIQ1vizsnmDiKDPQl1Ur8Sg99K559yIhBgZDZD",
     // joined: ISODate("2016-11-19T02:19:30.144Z"),
     honour: 0,
     profileImg: "https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png" 
