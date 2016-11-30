@@ -24,6 +24,7 @@ module.exports = function(app){
     app.get("/api/courses", courses.findAll);
     app.get("/api/courses/users/:courseId", courses.findAllUsers);
     app.put("/api/courses/addUser/:courseId", courses.addUser);
+    app.put("/api/courses/removeUser/:courseId", courses.removeUser);
     app.get("/api/courses/:courseId", courses.findById);
     app.post("/api/courses", courses.create);
     app.put("/api/courses/:courseId", courses.updateById);

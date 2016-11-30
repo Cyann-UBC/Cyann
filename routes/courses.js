@@ -55,6 +55,14 @@ exports.findById = function(req,res){
 
 // CREATE COURSE
 exports.create = function(req,res){
+    if( req.user.userType != "instructor" ) {
+        var err = new Error();
+        err.message = 'Access denied!';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
+        return;
+    }
     var newCourse = { courseName: req.body.courseName,
                      instructor: req.body.instructor,
                      TAs: req.body.TAs.split(" ").filter(onlyUnique) };
@@ -75,6 +83,16 @@ function onlyUnique(value, index, self) {
 }
 
 exports.updateById = function(req,res){
+
+    if( req.user.userType != "instructor" ) {
+        var err = new Error();
+        err.message = 'Access denied!';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
+        return;
+    }
+
     var courseId = req.params.courseId;
     Courses.findOne({'_id': courseId})
         .then(function(result){
@@ -102,6 +120,25 @@ exports.addUser = function(req,res){
                     return result;
             }
             result.users.push(req.user.userId);
+            return result.save();
+        })
+        .then(function (result){
+            res.json({ data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
+};
+
+exports.removeUser = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            for (var i = 0; i < result.users.length; i++) {
+                if (result.users[i] == req.user.userId) {
+                    result.user.splice(i,1);
+                    break;
+                }
+            }
             return result.save();
         })
         .then(function (result){

@@ -5,6 +5,15 @@ var fs = require('fs');
 
 //Upload the file and send back a response
 exports.upload = function(req,res){
+	if( req.user.userType != "instructor" ) {
+        var err = new Error();
+        err.message = 'Access denied!';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
+        return;
+    }
+
 	 console.log(req.course.courseName)
 	 console.log(req.file.mimetype); //form files
 	/* example output:
@@ -22,6 +31,7 @@ exports.upload = function(req,res){
 
 //Get a list of files inside a specific course directory
 exports.showFiles = function(req,res){
+
 	var filePath = "/uploads/" + req.course.courseName + '/' + req.params.type
 	var filesList = []
 //	console.log(req.course.courseName)
@@ -34,6 +44,15 @@ exports.showFiles = function(req,res){
 
 //Download a file in a specific course directory
 exports.download = function(req,res){
+	if( req.user.userType != "instructor" ) {
+        var err = new Error();
+        err.message = 'Access denied!';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
+        return;
+    }
+
 	var type = req.params.type
 	var filePath = "/uploads/" + req.course.courseName + "/" + type + "/"+ req.params.fileName
 	//console.log(__dirname + "/.." + path)
@@ -41,6 +60,15 @@ exports.download = function(req,res){
 }
 
 exports.deleteFile = function(req,res){
+	if( req.user.userType != "instructor" ) {
+        var err = new Error();
+        err.message = 'Access denied!';
+        err.status = 400;
+        res.status(400);
+        res.json(err);
+        return;
+    }
+
 	var type = req.params.type
 	var filePath = '/uploads/' + req.course.courseName + "/" + type + '/' +req.params.fileName
 	//console.log(path.join(__dirname + "/.." + filePath))

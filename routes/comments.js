@@ -201,6 +201,17 @@ exports.setAsAnswer = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+            var commentAuthor = Users.findById({ '_id' : thisComment.author });
+
+            if( commentAuthor.userType != "student" ) {
+                var err = new Error();
+                err.message = 'Only student answers can be set!';
+                err.status = 400;
+                res.status(400);
+                res.json(err);
+                return;
+            }
+
             if( thisComment.isAnswer != true ){
                 thisComment.isAnswer = true;
                 responseObject.message = 'COMMENT flagged as an answer';
@@ -253,6 +264,18 @@ exports.unsetAsAnswer = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+
+            var commentAuthor = Users.findById({ '_id' : thisComment.author });
+
+            if( commentAuthor.userType != "student" ) {
+                var err = new Error();
+                err.message = 'Only student answers can be unset!';
+                err.status = 400;
+                res.status(400);
+                res.json(err);
+                return;
+            }
+
             if( thisComment.isAnswer != false ){
                 thisComment.isAnswer = false;
                 responseObject.message = 'COMMENT unflagged as an answer';
