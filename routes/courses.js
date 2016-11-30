@@ -83,7 +83,7 @@ function onlyUnique(value, index, self) {
 }
 
 exports.updateById = function(req,res){
-    
+
     if( req.user.userType != "instructor" ) {
         var err = new Error();
         err.message = 'Access denied!';
@@ -120,6 +120,25 @@ exports.addUser = function(req,res){
                     return result;
             }
             result.users.push(req.user.userId);
+            return result.save();
+        })
+        .then(function (result){
+            res.json({ data: result });
+        }).catch(function(err){
+            res.send(err);
+        });
+};
+
+exports.removeUser = function(req,res){
+    var courseId = req.params.courseId;
+    Courses.findById({'_id': courseId})
+        .then(function(result){
+            for (var i = 0; i < result.users.length; i++) {
+                if (result.users[i] == req.user.userId) {
+                    result.user.splice(i,1);
+                    break;
+                }
+            }
             return result.save();
         })
         .then(function (result){
