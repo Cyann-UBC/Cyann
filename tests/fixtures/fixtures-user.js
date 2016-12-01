@@ -7,7 +7,7 @@ const SECRET_KEY = 'CPEN321_CYANN';
 // Generate list of user objects
 const users = [
   {   
-    _id:  new ObjectID(),
+    _id:  '100000000000000000000000',
     name: "Justin Toh",
     facebookId: "103837213438033",
     userType: "student",
@@ -18,7 +18,7 @@ const users = [
     profileImg: "https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png" 
   },
   {   
-    _id:  new ObjectID(),
+    _id:  '200000000000000000000000',
     name: "Howard Zhou",
     facebookId: "108546649632736",
     userType: "student",
@@ -29,7 +29,7 @@ const users = [
     profileImg: "https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png" 
   },
   {   
-    _id:  new ObjectID(),
+    _id:  '300000000000000000000000',
     name: "Chen Chen", 
     facebookId: "118559651961160",
     userType: "student",
@@ -40,10 +40,10 @@ const users = [
     profileImg: "https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png" 
   },
   {   
-    _id:  new ObjectID(),
+    _id:  '400000000000000000000000',
     name: "Sathish Gopalakrishnan",
     facebookId: "108599872960752",
-    userType: "Instructor",
+    userType: "instructor",
     email: "sathish_hieudbn_gopalakrishnan@tfbnw.net",
     socialToken: "EAASQ43P93LgBAMy1rjd77GtfGyfjdsoBOaZAJgqkgvZBpt7atLq1mg1YXnDAZCJZAmBZBlrby4MR29XuRZB63ZBYCPSwaqIH12TqyxVcfgyFIpsEMAhh5tCHxHw4GEbNDnGe6eFZAGsHV1taFST3jbCssdm3MwZAjFtcFDyhd79fS388xULRiZCXd2",
     // joined: ISODate("2016-11-19T02:19:30.144Z"),
@@ -51,10 +51,10 @@ const users = [
     profileImg: "https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png" 
   },
   {   
-    _id:  new ObjectID(),
+    _id:  '500000000000000000000000',
     name: "Farshid Agharebparast", 
     facebookId: "119151155234975",
-    userType: "Instructor",
+    userType: "instructor",
     email: "farshid_ftjiymr_agharebparast@tfbnw.net",
     socialToken: "EAASQ43P93LgBAKSgZBzb6w86MuUgtDjNUe4tZCJBaVBd7JSRlX5eW229ejBjpvNmg2OXnMJAksZCG2rxHptXL3IHvgp52t3QZBZBeIbdlg6pQjf01SDpXBjWVfwGxzimyG7N5548IXZBTx0Ak8sC27eUwbGzESFia7rJw4QKtR5iaAKapLHU4J",
     // joined: ISODate("2016-11-19T02:19:30.144Z"),
