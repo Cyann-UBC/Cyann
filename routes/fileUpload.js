@@ -44,14 +44,6 @@ exports.showFiles = function(req,res){
 
 //Download a file in a specific course directory
 exports.download = function(req,res){
-	if( req.user.userType != "instructor" ) {
-        var err = new Error();
-        err.message = 'Access denied!';
-        err.status = 400;
-        res.status(400);
-        res.json(err);
-        return;
-    }
 
 	var type = req.params.type
 	var filePath = "/uploads/" + req.course.courseName + "/" + type + "/"+ req.params.fileName
