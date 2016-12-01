@@ -46,16 +46,24 @@ describe("<<<<<<<<<<<< HONOR API >>>>>>>>>>>>", () => {
     });
 
     it('should NOT return the user\'s honor points (invalid :userId)', (done) => {
-      const invalidUserId = "0"
+      const invalidUserId = "12345"
       request(app)
         .get(`/api/honor/${invalidUserId}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(400)
         .expect((res) => {
-          expect(res.body).toInclude({
-            "message": "User not found",
-            "status" : 400,
-          });
+          expect(res.body).toInclude({ kind: 'ObjectId', message: 'Cast to ObjectId failed for value "12345" at path "_id"', name: 'CastError', path: '_id', value: '12345' });
+        })
+        .end(done);
+    });
+
+    it('should NOT return the user\'s honor points if user is an instructor', (done) => {
+      request(app)
+        .get(`/api/honor/${users[4]._id}`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ message: 'Access denied!', status: 400 });
         })
         .end(done);
     });
