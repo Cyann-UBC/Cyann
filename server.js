@@ -51,6 +51,6 @@ app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPat
 //----------------------------------------
 // START SERVER
 //----------------------------------------
-app.listen(3000);
-console.log("Listening to PORT 3000");
+app.listen(8080);
+console.log("Listening to PORT 8080");
 module.exports.app = app;

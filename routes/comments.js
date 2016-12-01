@@ -49,13 +49,13 @@ exports.create = function(req,res){
     var userId = req.user.userId;
     var commentContent = req.body.content;
 
-    if( !commentContent || commentContent == "" ){        
+    if( !commentContent || commentContent == "" ){
         res.status( 400 );
         res.json({ message: "You cannot create comments with EMPTY content" });
     }
 
-    var newComment = {  'content': commentContent, 
-                        'author': userId, 
+    var newComment = {  'content': commentContent,
+                        'author': userId,
                         'course': courseId };
     var responseObject = { message: "", data: "" };
     var newCommentObj = null;
@@ -125,7 +125,7 @@ exports.updateById = function(req,res){
         .catch(function(err){
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
-        });    
+        });
 }
 
 /*
@@ -159,14 +159,14 @@ exports.deleteById = function(req,res){
             }
         })
         // Find USER given userId
-        .then(function(){
-            return Users.findOne({ '_id': userId });
-        })
-        // Update USER's most recent COMMENT by removing commentId 
-        .then(function(result_userObj){
-            result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
-            return result_userObj.save();
-        })
+        // .then(function(){
+        //     return Users.findOne({ '_id': userId });
+        // })
+        // // Update USER's most recent COMMENT by removing commentId
+        // .then(function(result_userObj){
+        //     result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
+        //     return result_userObj.save();
+        // })
         // Send back response
         .then(function(result_userObj){
             responseObject.data = result_userObj;
@@ -176,7 +176,7 @@ exports.deleteById = function(req,res){
         .catch(function(err){
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
-        });    
+        });
 }
 
 /*
@@ -201,6 +201,17 @@ exports.setAsAnswer = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+            var commentAuthor = Users.findById({ '_id' : thisComment.author });
+
+            if( commentAuthor.userType != "student" ) {
+                var err = new Error();
+                err.message = 'Only student answers can be set!';
+                err.status = 400;
+                res.status(400);
+                res.json(err);
+                return;
+            }
+
             if( thisComment.isAnswer != true ){
                 thisComment.isAnswer = true;
                 responseObject.message = 'COMMENT flagged as an answer';
@@ -228,7 +239,7 @@ exports.setAsAnswer = function(req,res){
         .catch(function(err){
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
-        }); 
+        });
 }
 
 /*
@@ -253,6 +264,18 @@ exports.unsetAsAnswer = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+
+            var commentAuthor = Users.findById({ '_id' : thisComment.author });
+
+            if( commentAuthor.userType != "student" ) {
+                var err = new Error();
+                err.message = 'Only student answers can be unset!';
+                err.status = 400;
+                res.status(400);
+                res.json(err);
+                return;
+            }
+
             if( thisComment.isAnswer != false ){
                 thisComment.isAnswer = false;
                 responseObject.message = 'COMMENT unflagged as an answer';
@@ -280,7 +303,7 @@ exports.unsetAsAnswer = function(req,res){
         .catch(function(err){
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
-        }); 
+        });
 }
 
 /*
@@ -340,7 +363,7 @@ exports.upvote = function(req,res){
         .catch(function(err){
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
-        }); 
+        });
 }
 
 /*
