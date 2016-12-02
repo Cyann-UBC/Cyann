@@ -35,8 +35,8 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
             data: [ { 
                 _id: '000000000000000000000001', 
                 courseName: 'TEST_COURSE_A', 
-                instructor: [ { _id: '400000000000000000000000', email: 'sathish_hieudbn_gopalakrishnan@tfbnw.net', name: 'Sathish Gopalakrishnan', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'instructor' } ], 
-                TAs: [ { _id: '300000000000000000000000', email: 'chen_pzmpdbi_chen@tfbnw.net', name: 'Chen Chen', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' } ], 
+                instructor: [ { _id: '400000000000000000000000', email: 'sathish_hieudbn_gopalakrishnan@tfbnw.net', name: 'Sathish Gopalakrishnan', profileImg: 'https://static.xx.fbcdn.net/image3.png', userType: 'instructor' } ], 
+                TAs: [ { _id: '300000000000000000000000', email: 'chen_pzmpdbi_chen@tfbnw.net', name: 'Chen Chen', profileImg: 'https://static.xx.fbcdn.net/image2.png', userType: 'student' } ], 
                 users: [ '100000000000000000000000', '200000000000000000000000' ] 
               }, 
               { 
@@ -111,8 +111,8 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
-          expect(res.body).toInclude({ __v: 0, _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', facebookId: '103837213438033', honor: 0, name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' })
-          expect(res.body).toInclude({ __v: 0, _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', facebookId: '108546649632736', honor: 0, name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' })
+          expect(res.body).toInclude({ __v: 0, _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', facebookId: '103837213438033', honor: 0, name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/image0.png', userType: 'student' })
+          expect(res.body).toInclude({ __v: 0, _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', facebookId: '108546649632736', honor: 0, name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/image1.png', userType: 'student' })
         })
         .end(done);
     });

@@ -33,8 +33,8 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({ 
             data: [ 
-              { _id: '000000000000000000000010', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, comments: [], content: 'TEST_POST_A_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.331Z', title: 'TEST_POST_A', updatedAt: '2016-12-01T17:59:27.331Z' }, 
-              { _id: '000000000000000000000020', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, comments: [], content: 'TEST_POST_B_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.329Z', title: 'TEST_POST_B', updatedAt: '2016-12-01T17:59:27.329Z' } 
+              { _id: '000000000000000000000010', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/image0.png', userType: 'student' }, comments: [], content: 'TEST_POST_A_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.331Z', title: 'TEST_POST_A', updatedAt: '2016-12-01T17:59:27.331Z' }, 
+              { _id: '000000000000000000000020', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/image1.png', userType: 'student' }, comments: [], content: 'TEST_POST_B_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.329Z', title: 'TEST_POST_B', updatedAt: '2016-12-01T17:59:27.329Z' } 
             ],
             message: 'Retrieved All Posts!' 
           });
@@ -69,7 +69,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ 
-            data: { _id: '000000000000000000000010', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, comments: [], content: 'TEST_POST_A_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.331Z', title: 'TEST_POST_A', updatedAt: '2016-12-01T17:59:27.331Z' }, 
+            data: { _id: '000000000000000000000010', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/image0.png', userType: 'student' }, comments: [], content: 'TEST_POST_A_CONTENT', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:27.331Z', title: 'TEST_POST_A', updatedAt: '2016-12-01T17:59:27.331Z' }, 
             message: 'Post retrieved' 
           });
         })
@@ -108,7 +108,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ 
-            user: { __v: 0, _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', facebookId: '103837213438033', honor: 0, name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' },
+            user: { __v: 0, _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', facebookId: '103837213438033', honor: 0, name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/image0.png', userType: 'student' },
             message: 'post created and user updated, no email sent'
           });
         })

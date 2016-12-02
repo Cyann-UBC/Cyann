@@ -34,8 +34,8 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({ 
             data: [ 
-              { _id: '000000000000000000000100', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, content: 'TEST_COMMENT_A', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:30.331Z', isAnswer: false, updatedAt: '2016-12-01T17:59:30.331Z', upvotedUsers: [], upvotes: 0 }, 
-              { _id: '000000000000000000000200', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, content: 'TEST_COMMENT_B', course: '000000000000000000000001', createdAt: '2016-12-01T18:00:27.331Z', isAnswer: true, updatedAt: '2016-12-01T18:00:27.331Z', upvotedUsers: [ '100000000000000000000000', '300000000000000000000000', '400000000000000000000000' ], upvotes: 3 } 
+              { _id: '000000000000000000000100', author: { _id: '100000000000000000000000', email: 'justin_btggsjf_toh@tfbnw.net', name: 'Justin Toh', profileImg: 'https://static.xx.fbcdn.net/image0.png', userType: 'student' }, content: 'TEST_COMMENT_A', course: '000000000000000000000001', createdAt: '2016-12-01T17:59:30.331Z', isAnswer: false, updatedAt: '2016-12-01T17:59:30.331Z', upvotedUsers: [], upvotes: 0 }, 
+              { _id: '000000000000000000000200', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/image1.png', userType: 'student' }, content: 'TEST_COMMENT_B', course: '000000000000000000000001', createdAt: '2016-12-01T18:00:27.331Z', isAnswer: true, updatedAt: '2016-12-01T18:00:27.331Z', upvotedUsers: [ '100000000000000000000000', '300000000000000000000000', '400000000000000000000000' ], upvotes: 3 } 
             ], 
             message: 'All COMMENT retrieved' 
           });
@@ -70,7 +70,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ 
-            data: { _id: '000000000000000000000200', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/rsrc.php/v3/yy/r/1TFLnx1w5F2.png', userType: 'student' }, content: 'TEST_COMMENT_B', course: '000000000000000000000001', createdAt: '2016-12-01T18:00:27.331Z', isAnswer: true, updatedAt: '2016-12-01T18:00:27.331Z', upvotedUsers: [ '100000000000000000000000', '300000000000000000000000', '400000000000000000000000' ], upvotes: 3 }, 
+            data: { _id: '000000000000000000000200', author: { _id: '200000000000000000000000', email: 'howard_pyabina_zhou@tfbnw.net', name: 'Howard Zhou', profileImg: 'https://static.xx.fbcdn.net/image1.png', userType: 'student' }, content: 'TEST_COMMENT_B', course: '000000000000000000000001', createdAt: '2016-12-01T18:00:27.331Z', isAnswer: true, updatedAt: '2016-12-01T18:00:27.331Z', upvotedUsers: [ '100000000000000000000000', '300000000000000000000000', '400000000000000000000000' ], upvotes: 3 }, 
             message: 'COMMENT retrieved' 
           });
         })
