@@ -58,7 +58,7 @@ exports.upload = function(req,res){
 	 */
 	res.json({message:'file uploaded'});
 
-}
+	}
 }
 //Get a list of files inside a specific course directory
 exports.showFiles = function(req,res){
@@ -74,15 +74,16 @@ exports.showFiles = function(req,res){
 }
 
 //Download a file in a specific course directory
-exports.download = function(req,res){i
-
+exports.download = function(req,res){
+	var fileName = req.query.fileName
 	var type = req.params.type
-	var filePath = "/uploads/" + req.course.courseName + "/" + type + "/"+ req.params.fileName
+	var filePath = "/uploads/" + req.course.courseName + "/" + type + "/"+ fileName
 	//console.log(__dirname + "/.." + path)
 	res.sendFile(path.join(__dirname + "/.." + filePath))
 }
 
 exports.deleteFile = function(req,res){
+	var fileName = req.query.fileName
 	if( req.user.userType != "instructor" ) {
         var err = new Error();
         err.message = 'Access denied!';
@@ -93,7 +94,7 @@ exports.deleteFile = function(req,res){
     }
 
 	var type = req.params.type
-	var filePath = '/uploads/' + req.course.courseName + "/" + type + '/' +req.params.fileName
+	var filePath = '/uploads/' + req.course.courseName + "/" + type + '/' +fileName
 	//console.log(path.join(__dirname + "/.." + filePath))
 	fs.unlink(path.join(__dirname + "/.." + filePath),function(){
 		res.json({message:'deleted'})
