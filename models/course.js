@@ -3,7 +3,7 @@ var mongoose = require("mongoose");
 
 var db = mongoose.createConnection("mongodb://localhost:27017/CyannDatabase");
     db.on("error",function(err){ console.error("MongoDB Connection Failed",err); });
-    db.once("open",function(){ console.log("MongoDB [courseCollection] connected successfully"); });
+    // db.once("open",function(){ console.log("MongoDB [courseCollection] connected successfully"); });
 
 //-----------------------------------
 // DATABASE SCHEMA

@@ -1,5 +1,4 @@
-var User =   require("../models/user");
-
+var User = require("../models/user");
 
 exports.getHonorPointsByUserId = function(req, res) {
 	if( req.user.userType == "instructor" ) {
