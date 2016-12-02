@@ -15,6 +15,7 @@ exports.findPostsByCourseId = function(req,res){
         .then(function (result){
             res.json({ message: 'Retrieved All Posts!', data: result.posts });
         }).catch(function(err){
+            res.status(500);
             res.send(err);
         });
 };
@@ -45,6 +46,13 @@ exports.createPostsByCourseId = function(req,res){
                    'course': courseId};
     var newPostId = null;
 
+    if( ( !req.body.title || req.body.title == "" ) ||
+        ( !req.body.content || req.body.content == "" ) ){
+        res.status( 400 );
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
+    }
+
     var emailList = [];
     //Create new post and get its postId
     var newPostObj = req.course.posts.create(newPost);
@@ -57,7 +65,7 @@ exports.createPostsByCourseId = function(req,res){
       return Users.findById(userId)
     })
     .then(function(user){
-      if(user.userType === 'Instructor'){
+      if(user.userType === 'instructor'){
         Courses.findById(req.params.courseId)
         .populate({ path: 'users', model: Users })
         .then(function(course){
@@ -80,10 +88,10 @@ exports.createPostsByCourseId = function(req,res){
             }
             smtpTransport.sendMail(mailOptions, function(error, response){
              if(error){
-                    console.log(error);
+                res.status(500);
                 res.end("error");
              }else{
-                    console.log("Message sent: " + response.message);
+                    // console.log("Message sent: " + response.message);
                 res.json({message:'posted created and email sent'});
                  }
               });
@@ -94,6 +102,7 @@ exports.createPostsByCourseId = function(req,res){
       }
     })
     .catch(function(err){
+      res.status(500);
       res.send(err)
     })
 };
@@ -113,8 +122,14 @@ exports.updatePostsByCourseId = function(req,res){
     var newTitle = req.body.title;
     var newContent = req.body.content;
 
-    var authorOfPost = req.post.author;
+    if( ( !req.body.title || req.body.title == "" ) ||
+        ( !req.body.content || req.body.content == "" ) ){
+        res.status( 400 );
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
+    }
 
+    var authorOfPost = req.post.author;
     var updatePost = {};
     if( newTitle )
         updatePost["title"] = newTitle;
@@ -125,13 +140,13 @@ exports.updatePostsByCourseId = function(req,res){
       var promise = Courses.update( {'_id': courseId,'posts._id': postId },
                                       { $set : {"posts.$.title":newTitle, "posts.$.content":newContent, "posts.$.updatedAt":new Date()} } );
       promise.then(function (result){
-          //send newTitle and newContent back for rendering purpose
-          res.json({ message: 'Updated post #'+postId+'!', data: {title:newTitle, conent:newContent} });
-        //  var promise = Users.update({'_id':req.params.userId, ''})
+        res.json({ message: 'Updated post #'+postId+'!', data: {title:newTitle, conent:newContent} });
       }).catch(function(err){
-          res.send(err);
+        res.status(200);
+        res.send(err);
       });
     }else{
+      res.status(401);
       res.json({message:'You do not have permissions to edit the POST'})
     }
 
@@ -166,23 +181,12 @@ exports.deleteByCourseId = function(req,res){
       res.json({message:"Post deleted and user updated",data:result});
     })
     .catch(function(err){
+      res.status(500);
       res.send(err);
     })
   }
   else{
-    res.json({message:"You do not have permissions to edit the POST"})
+    res.status(401);
+    res.json({message:"You do not have permissions to delete the POST"})
   }
 }
-
-/*
-  parameter: courseId, postId
-  usage: delete a post within a specific course given the postId and courseId
-*/
-exports.deleteAll = function(req,res){
-  var promise = Courses.update({courseName:req.course.courseName}, { $set: { posts: [] }})
-  promise.then(function(result){
-    res.json({data:result})
-  }).catch(function(err){
-    res.send(err)
-  })
-};

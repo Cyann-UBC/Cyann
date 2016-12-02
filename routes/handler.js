@@ -8,7 +8,7 @@ exports.handleCourseId = function(req,res,next,id){
         .populate("posts.comments.author", "name email profileImg userType", Users)
         .then(function (result){
             if(!result){
-                err = new Error("Not Found");
+                err = new Error("RESOURCE_NOT_FOUND");
                 err.status = 404;
                 return next(err);
             }
@@ -22,7 +22,7 @@ exports.handleCourseId = function(req,res,next,id){
 exports.handlePostId = function(req,res,next,id){
     req.post = req.course.posts.id(id)
     if(!req.post){
-        err = new Error("Not Found");
+        err = new Error("RESOURCE_NOT_FOUND");
         err.status = 404;
         return next(err);
     }
@@ -36,7 +36,7 @@ exports.handlePostId = function(req,res,next,id){
 exports.handleCommentId = function(req,res,next,id){
     req.comment = req.post.comments.id(id);
     if(!req.comment){
-        err = new Error("Comment Not Found");
+        err = new Error("RESOURCE_NOT_FOUND");
         err.status = 404;
         return next(err);
     }
@@ -51,6 +51,7 @@ exports.handleUserId = function(req,res,next,id){
             req.user = user
             return next();
         }).catch(function(err){
-            res.send(err)
+            res.status(400);
+            res.send(err);
         });
 }

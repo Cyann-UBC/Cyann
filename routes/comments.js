@@ -51,7 +51,8 @@ exports.create = function(req,res){
 
     if( !commentContent || commentContent == "" ){
         res.status( 400 );
-        res.json({ message: "You cannot create comments with EMPTY content" });
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
     }
 
     var newComment = {  'content': commentContent,
@@ -96,6 +97,12 @@ exports.updateById = function(req,res){
     // BODY (x-www-form-urlencoded)
     var newCommentContent = req.body.content;
 
+    if( !newCommentContent || newCommentContent == "" ){
+        res.status( 400 );
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
+    }
+
     // Response Object to send back to caller
     var responseObject = { message: "", data: "" };
     var thisComment = {};
@@ -110,16 +117,17 @@ exports.updateById = function(req,res){
                 thisComment.content = newCommentContent;
                 thisComment.updatedAt = now;
                 responseObject.message = 'COMMENT updated';
+                res.status( 200 );
                 return result_courseObj.save();
             }
             else{
+                res.status( 401 );
                 responseObject.message = 'You do not have permissions to edit the COMMENT';
             }
         })
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
@@ -149,28 +157,18 @@ exports.deleteById = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             var authorOfComment = result_courseObj.posts.id(postId).comments.id(commentId).author;
-            if( authorOfComment == userId ){
+            if( authorOfComment == userId || req.user.userType == "instructor" ){
                 result_courseObj.posts.id(postId).comments = result_courseObj.posts.id(postId).comments.filter(function(e){ return e.id != commentId; });
                 responseObject.message = 'COMMENT deleted';
+                res.status( 200 );
                 return result_courseObj.save();
             }
             else{
+                res.status( 401 );
                 responseObject.message = 'You do not have permissions to delete the COMMENT';
             }
         })
-        // Find USER given userId
-        // .then(function(){
-        //     return Users.findOne({ '_id': userId });
-        // })
-        // // Update USER's most recent COMMENT by removing commentId
-        // .then(function(result_userObj){
-        //     result_userObj.comments = result_userObj.comments.filter(function(e){ return e != commentId; });
-        //     return result_userObj.save();
-        // })
-        // Send back response
         .then(function(result_userObj){
-            responseObject.data = result_userObj;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
@@ -201,25 +199,24 @@ exports.setAsAnswer = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
-            var commentAuthor = Users.findById({ '_id' : thisComment.author });
 
-            if( commentAuthor.userType != "student" ) {
-                var err = new Error();
-                err.message = 'Only student answers can be set!';
-                err.status = 400;
-                res.status(400);
-                res.json(err);
-                return;
-            }
-
-            if( thisComment.isAnswer != true ){
-                thisComment.isAnswer = true;
-                responseObject.message = 'COMMENT flagged as an answer';
-                updateHonorPoints = true;
-                return result_courseObj.save();
+            if( req.user.userType == "instructor" || result_courseObj.TAs.indexOf(userId) >= 0 ){
+                if( thisComment.isAnswer != true ){
+                    thisComment.isAnswer = true;
+                    updateHonorPoints = true;
+                    res.status(200);
+                    responseObject.message = 'COMMENT flagged as an answer';
+                    responseObject.data = thisComment;
+                    return result_courseObj.save();
+                }
+                else{
+                    res.status(400);
+                    responseObject.message = 'COMMENT is already an answer';
+                    return
+                }
             }
             else{
-                responseObject.message = 'COMMENT is already an answer';
+                throw new Error("UNAUTHORIZED");
             }
         })
         .then(function(){
@@ -228,16 +225,20 @@ exports.setAsAnswer = function(req,res){
                            { _id: thisComment.author },
                            { $inc: { honour: +POINTS_AWARDED_FOR_EACH_ANSWER } }
                         )
-            }
+            }else{ return }
         })
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.status( 500 );
+            if( err == "Error: UNAUTHORIZED" ){
+                res.status(401);
+                res.json({message: 'You do not have permissions to edit the COMMENT'});
+                return;
+            }
+            res.status(500);
             res.json({ message: "Something went wrong", err: err });
         });
 }
@@ -265,25 +266,22 @@ exports.unsetAsAnswer = function(req,res){
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
 
-            var commentAuthor = Users.findById({ '_id' : thisComment.author });
-
-            if( commentAuthor.userType != "student" ) {
-                var err = new Error();
-                err.message = 'Only student answers can be unset!';
-                err.status = 400;
-                res.status(400);
-                res.json(err);
-                return;
-            }
-
-            if( thisComment.isAnswer != false ){
-                thisComment.isAnswer = false;
-                responseObject.message = 'COMMENT unflagged as an answer';
-                updateHonorPoints = true;
-                return result_courseObj.save();
+            if( req.user.userType == "instructor" || result_courseObj.TAs.indexOf(userId) >= 0 ){
+                if( thisComment.isAnswer != false ){
+                    thisComment.isAnswer = false;
+                    updateHonorPoints = true;
+                    res.status(200);
+                    responseObject.message = 'COMMENT unflagged as an answer';
+                    return result_courseObj.save();
+                }
+                else{
+                    res.status(400);
+                    responseObject.message = 'COMMENT is already NOT an answer';
+                    return
+                }
             }
             else{
-                responseObject.message = 'COMMENT is already NOT an answer';
+                throw new Error("UNAUTHORIZED");
             }
         })
         .then(function(){
@@ -297,11 +295,15 @@ exports.unsetAsAnswer = function(req,res){
         // Send back response
         .then(function(){
             responseObject.data = thisComment;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
-            res.status( 500 );
+            if( err == "Error: UNAUTHORIZED" ){
+                res.status(401);
+                res.json({message: 'You do not have permissions to edit the COMMENT'});
+                return;
+            }
+            res.status(500);
             res.json({ message: "Something went wrong", err: err });
         });
 }
@@ -329,21 +331,19 @@ exports.upvote = function(req,res){
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
             if( thisComment.author == userId ){
-                responseObject.message = 'You cannot upvote your own COMMENT';
-                responseObject.data = thisComment;
-                res.json( responseObject );
+                throw new Error("CANNOT_VOTE_YOURSELF");
             }
             else if( thisComment.upvotedUsers.indexOf(userId) < 0 ){
                 thisComment.upvotes += 1;
                 thisComment.upvotedUsers.push(userId);
-                responseObject.message = 'COMMENT upvoted';
                 updateHonorPoints = true;
+                res.status(200);
+                responseObject.data = thisComment;
+                responseObject.message = 'COMMENT upvoted';
                 return result_courseObj.save();
             }
             else{
-                responseObject.message = 'You have already voted for the COMMENT';
-                responseObject.data = thisComment;
-                res.json( responseObject );
+                throw new Error("ALREADY_VOTED");
             }
         })
         .then(function(){
@@ -356,11 +356,22 @@ exports.upvote = function(req,res){
         })
         // Send back response
         .then(function(){
-            responseObject.data = thisComment;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
+            if( err == "Error: ALREADY_VOTED" ){
+                res.status(400);
+                responseObject.message = 'You have already voted for the COMMENT';
+                res.json( responseObject );
+                return;
+            }
+            else if( err == "Error: CANNOT_VOTE_YOURSELF" ){
+                res.status(400);
+                responseObject.message = 'You cannot vote your own COMMENT';
+                res.json( responseObject );
+                return;
+            }
+
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
         });
@@ -388,17 +399,20 @@ exports.resetVote = function(req,res){
     Courses.findOne({ '_id': courseId, 'posts._id': postId, 'posts.comments._id': commentId })
         .then(function(result_courseObj){
             thisComment = result_courseObj.posts.id(postId).comments.id(commentId);
+            if( thisComment.author == userId ){
+                throw new Error("CANNOT_VOTE_YOURSELF");
+            }
             if( thisComment.upvotedUsers.indexOf(userId) > -1 ){
                 thisComment.upvotes -= 1;
                 thisComment.upvotedUsers = thisComment.upvotedUsers.filter(function(e){ return e != userId; });
-                responseObject.message = 'Vote for COMMENT is resetted';
                 updateHonorPoints = true
+                res.status(200);
+                responseObject.data = thisComment;
+                responseObject.message = 'Vote for COMMENT is resetted';
                 return result_courseObj.save();
             }
             else{
-                responseObject.message = 'You have not voted for the COMMENT';
-                responseObject.data = thisComment;
-                res.json( responseObject );
+                throw new Error("HAVENT_VOTED");
             }
         })
         .then(function(){
@@ -411,11 +425,22 @@ exports.resetVote = function(req,res){
         })
         // Send back response
         .then(function(){
-            responseObject.data = thisComment;
-            res.status( 200 );
             res.json( responseObject );
         })
         .catch(function(err){
+            if( err == "Error: HAVENT_VOTED" ){
+                res.status(400);
+                responseObject.message = 'You have not voted for the COMMENT';
+                res.json( responseObject );
+                return;
+            }
+            else if( err == "Error: CANNOT_VOTE_YOURSELF" ){
+                res.status(400);
+                responseObject.message = 'You cannot vote your own COMMENT';
+                res.json( responseObject );
+                return;
+            }
+
             res.status( 500 );
             res.json({ message: "Something went wrong", err: err });
         });

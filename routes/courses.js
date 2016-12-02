@@ -65,10 +65,15 @@ exports.create = function(req,res){
     }
     var newCourse = { courseName: req.body.courseName,
                      instructor: req.body.instructor,
-                     TAs: req.body.TAs.split(" ").filter(onlyUnique) };
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName)
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/readings')
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/assignments')
+                     TAs: req.body.TAs };
+
+    // Attempt to create folders for uploading
+    try{
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName)
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/readings')
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/assignments')
+    }catch(err){}
+
     Courses.create(newCourse)
         .then(function (result){
             res.json({ message: "Course created!", data: result });
@@ -99,13 +104,15 @@ exports.updateById = function(req,res){
             if (req.body.TAs != null)
                 for (var i = 0; i < req.body.TAs.length; i++)
                     result.TAs.push(req.body.TAs[i]);
+
             if (req.body.instructor != null)
                 for (var i = 0; i < req.body.instructor.length; i++)
                     result.instructor.push(req.body.instructor[i]);
+
             return result.save();
         })
         .then(function (result){
-            res.json({ message: 'Updated course #'+courseName+'', data: result });
+            res.json({ data: result });
         }).catch(function(err){
             res.send(err);
         });

@@ -38,7 +38,6 @@ module.exports = function(app){
     app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
     app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsByCourseId );
     app.delete("/api/courses/:courseId/posts/:postId", posts.deleteByCourseId );
-    app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
     //---------------------------------------
     // COMMENTS ROUTES
@@ -65,7 +64,6 @@ module.exports = function(app){
     // USER INFO ROUTES
     //---------------------------------------
     var userInfo = require('./userInfo');
-    app.get("/api/users", userInfo.findAll);
     app.get("/api/users/my", userInfo.findById)
     app.get("/api/users/my/posts", userInfo.findPostById)
     app.get("/api/users/my/comments", userInfo.findCommentById)
