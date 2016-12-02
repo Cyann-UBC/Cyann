@@ -76,6 +76,20 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
         })
         .end(done);
     });
+
+    it('should return a comment (DB doesn\'t have entry corresponding to :commentId)', (done) => {
+      request(app)
+        .get(`/api/courses/${courses[0]._id}/posts/${courses[0].posts[0]._id}/comments/000000000000000000000000`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toInclude({ 
+            error: { status: 404 }, 
+            message: 'RESOURCE_NOT_FOUND' 
+          });
+        })
+        .end(done);
+    });
   });
 
   describe("POST /api/courses/:courseId/posts/:postId/comments", () => {

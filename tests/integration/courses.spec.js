@@ -62,7 +62,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
-        .get('/api/courses/000000000000000000000002')
+        .get(`/api/courses/${courses[1]._id}`)
         .expect(401)
         .expect((res) => {
           expect(res.body).toInclude({
@@ -72,15 +72,30 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         })
         .end(done);
     });
+
     it('should return course data', (done) => {
       request(app)
-        .get('/api/courses/000000000000000000000002')
+        .get(`/api/courses/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ 
             data: { TAs: [], _id: '000000000000000000000002', courseName: 'TEST_COURSE_B', instructor: [], users: [] }, 
             message: 'Course Found!' 
+          });
+        })
+        .end(done);
+    });
+
+    it('should return course data (DB doesn\'t have entry corresponding to :courseId)', (done) => {
+      request(app)
+        .get(`/api/courses/000000000000000000000000`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toInclude({ 
+            error: { status: 404 }, 
+            message: 'RESOURCE_NOT_FOUND' 
           });
         })
         .end(done);
@@ -95,7 +110,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
-        .get('/api/courses/users/000000000000000000000002')
+        .get(`/api/courses/users/${courses[1]._id}`)
         .expect(401)
         .expect((res) => {
           expect(res.body).toInclude({
@@ -107,7 +122,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
     it('should return list of users registered to course', (done) => {
       request(app)
-        .get('/api/courses/users/000000000000000000000001')
+        .get(`/api/courses/users/${courses[0]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
@@ -175,7 +190,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
-        .put('/api/courses/addUser/000000000000000000000002')
+        .put(`/api/courses/addUser/${courses[1]._id}`)
         .expect(401)
         .expect((res) => {
           expect(res.body).toInclude({
@@ -188,7 +203,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should register user into the course', (done) => {
       request(app)
-        .put('/api/courses/addUser/000000000000000000000002')
+        .put(`/api/courses/addUser/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
@@ -199,7 +214,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should not add registered users into the course again (i.e. double entry)', (done) => {
       request(app)
-        .put('/api/courses/addUser/000000000000000000000002')
+        .put(`/api/courses/addUser/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
@@ -217,7 +232,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
-        .put('/api/courses/removeUser/000000000000000000000002')
+        .put(`/api/courses/removeUser/${courses[0]._id}`)
         .expect(401)
         .expect((res) => {
           expect(res.body).toInclude({
@@ -230,7 +245,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should deregister user from the course', (done) => {
       request(app)
-        .put('/api/courses/removeUser/000000000000000000000001')
+        .put(`/api/courses/removeUser/${courses[0]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(200)
         .expect((res) => {
@@ -251,7 +266,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
-        .put('/api/courses/000000000000000000000002')
+        .put(`/api/courses/${courses[1]._id}`)
         .expect(401)
         .expect((res) => {
           expect(res.body).toInclude({
@@ -264,7 +279,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should not allow non-instructors to modify a course', (done) => {
       request(app)
-        .put('/api/courses/000000000000000000000002')
+        .put(`/api/courses/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .send({ instructor, TAs })
         .expect(400)
@@ -276,7 +291,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
     it('should allow an instructor to modify a course', (done) => {
       request(app)
-        .put('/api/courses/000000000000000000000002')
+        .put(`/api/courses/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[4]}`)
         .send({ instructor, TAs })
         .expect(200)

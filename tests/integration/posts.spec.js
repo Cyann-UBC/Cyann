@@ -62,6 +62,20 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
+    it('should return post data (DB doesn\'t have entry corresponding to :postId)', (done) => {
+      request(app)
+        .get(`/api/courses/${courses[0]._id}/posts/000000000000000000000000`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toInclude({ 
+            error: { status: 404 }, 
+            message: 'RESOURCE_NOT_FOUND' 
+          });
+        })
+        .end(done);
+    });
+
     it('should return post data', (done) => {
       request(app)
         .get(`/api/courses/${courses[0]._id}/posts/${courses[0].posts[0]._id}`)
