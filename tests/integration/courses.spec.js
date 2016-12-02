@@ -249,7 +249,6 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });    
   });
 
-
   describe("[API ROUTE] PUT /api/courses/removeUser/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
