@@ -5,7 +5,6 @@ var request = require('request');
 
 
 exports.register = function(req,res){
-
     if( !req.body.email || !req.body.profileImg || !req.body.socialToken ) {
         var err = new Error();
         err.message = 'Either \'email\' or \'profileImg\' or \'socialToken\' param is missing';
@@ -36,6 +35,7 @@ exports.register = function(req,res){
                 }
             })
             .then(function(user){
+              // console.log(user)
                 var token = jwt.sign({
                                     facebookId: profile.id,
                                     userId: user._id,
@@ -69,6 +69,7 @@ function validateWithProvider(socialToken) {
             },
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
+                  console.log(body)
                     resolve(JSON.parse(body));
                 } else {
                     reject(error);
