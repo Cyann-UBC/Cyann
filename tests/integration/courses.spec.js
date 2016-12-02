@@ -157,7 +157,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
-    it('should not allow non-instructors to create a course', (done) => {
+    it('should NOT allow non-instructors to create a course', (done) => {
       request(app)
         .post('/api/courses/')
         .set('Authorization', `Bearer ${user_tokens[0]}`)
@@ -212,7 +212,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
-    it('should not add registered users into the course again (i.e. double entry)', (done) => {
+    it('should NOT add registered users into the course again (i.e. double entry)', (done) => {
       request(app)
         .put(`/api/courses/addUser/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
@@ -277,7 +277,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
-    it('should not allow non-instructors to modify a course', (done) => {
+    it('should NOT allow non-instructors to modify a course', (done) => {
       request(app)
         .put(`/api/courses/${courses[1]._id}`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
