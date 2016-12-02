@@ -20,15 +20,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -64,15 +56,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -110,15 +94,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -199,21 +175,13 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
     });
       
-    it('should edit a post', (done) => {
+    it('should edit a post if user is the post\'s author', (done) => {
       request(app)
         .put(`/api/courses/${courses[0]._id}/posts/${courses[0].posts[0]._id}`)
         .send({title, content})
@@ -296,15 +264,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);

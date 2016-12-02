@@ -20,15 +20,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -75,15 +67,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -116,15 +100,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -160,15 +136,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -212,15 +180,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -262,15 +222,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
@@ -304,15 +256,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect((res) => {
           expect(res.body).toInclude({
             "message": "No authorization token was found",
-            "error": {
-              "name": "UnauthorizedError",
-              "message": "No authorization token was found",
-              "code": "credentials_required",
-              "status": 401,
-              "inner": {
-                "message": "No authorization token was found"
-              }
-            }
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
           })
         })
         .end(done);
