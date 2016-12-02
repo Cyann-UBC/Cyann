@@ -43,7 +43,7 @@ exports.showFiles = function(req,res){
 }
 
 //Download a file in a specific course directory
-exports.download = function(req,res){
+exports.download = function(req,res){i
 
 	var type = req.params.type
 	var filePath = "/uploads/" + req.course.courseName + "/" + type + "/"+ req.params.fileName

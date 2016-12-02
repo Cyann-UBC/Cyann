@@ -135,7 +135,7 @@ exports.removeUser = function(req,res){
         .then(function(result){
             for (var i = 0; i < result.users.length; i++) {
                 if (result.users[i] == req.user.userId) {
-                    result.user.splice(i,1);
+                    result.users.splice(i,1);
                     break;
                 }
             }
