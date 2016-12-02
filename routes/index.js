@@ -38,7 +38,6 @@ module.exports = function(app){
     app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
     app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsByCourseId );
     app.delete("/api/courses/:courseId/posts/:postId", posts.deleteByCourseId );
-    app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
     //---------------------------------------
     // COMMENTS ROUTES
@@ -87,9 +86,9 @@ module.exports = function(app){
     var upload = multer({storage: fileUpload.storage, dest: './uploads'});
     var type = upload.single('attachment');
     app.post("/api/:courseId/files/:type/upload",type, fileUpload.upload);
-    app.get("/api/:courseId/files/:type/download/:fileName", fileUpload.download);
+    app.get("/api/:courseId/files/:type/download", fileUpload.download);
     app.get("/api/:courseId/files/:type", fileUpload.showFiles);
-    app.delete("/api/:courseId/files/:type/:fileName",fileUpload.deleteFile);
+    app.delete("/api/:courseId/files/:type",fileUpload.deleteFile);
     // //Save file for individual as attachment
     // //Uses formidable, gridfs, fs
 }

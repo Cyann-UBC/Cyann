@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");                // Pull information from
 var path = require("path");
 // var multer  = require('multer')                      // Use multer for file uploads
 var expressJWT = require('express-jwt');
+var cors = require('cors');
 //var jwt = require('jsonwebtoken');
 //var request = require('request');
 
@@ -21,7 +22,8 @@ mongoose.Promise = global.Promise;
 // BEGIN ROUTING
 //----------------------------------------
 var app = express();
-// app.use(morgan('dev'));                                 // Log every request to the console{}
+app.use(cors());
+// app.use(morgan('dev'));                              // Log every request to the console{}
 app.use(bodyParser.json());                             // Parse application/json
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
 app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['/api/users/register'] })); //jwt verification middleware.
@@ -42,10 +44,10 @@ app.use(function(err, req, res, next) {
 //----------------------------------------
 // ROUTES FOR WEBPAGE
 //----------------------------------------
-var publicPath = path.resolve(__dirname, 'www');
-app.use(express.static(publicPath));
-app.get('/', function(req, res){ res.sendFile('/index.html', {root: publicPath}); });
-app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPath}); });
+// var publicPath = path.resolve(__dirname, 'www');
+// app.use(express.static(publicPath));
+// app.get('/', function(req, res){ res.sendFile('/index.html', {root: publicPath}); });
+// app.get('/main', function(req, res){ res.sendFile('/main.html', {root: publicPath}); });
 
 
 //----------------------------------------
