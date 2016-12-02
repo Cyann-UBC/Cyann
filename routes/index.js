@@ -57,7 +57,6 @@ module.exports = function(app){
     // USER AUTHENTICATION ROUTES
     //---------------------------------------
     var userLogin = require('./userLogin');
-    //app.post("/api/users/login", userLogin.login);
     app.post("/api/users/register", userLogin.register);
 
     //---------------------------------------
@@ -85,9 +84,9 @@ module.exports = function(app){
     var upload = multer({storage: fileUpload.storage, dest: './uploads'});
     var type = upload.single('attachment');
     app.post("/api/:courseId/files/:type/upload",type, fileUpload.upload);
-    app.get("/api/:courseId/files/:type/download/:fileName", fileUpload.download);
+    app.get("/api/:courseId/files/:type/download", fileUpload.download);
     app.get("/api/:courseId/files/:type", fileUpload.showFiles);
-    app.delete("/api/:courseId/files/:type/:fileName",fileUpload.deleteFile);
+    app.delete("/api/:courseId/files/:type",fileUpload.deleteFile);
     // //Save file for individual as attachment
     // //Uses formidable, gridfs, fs
 }

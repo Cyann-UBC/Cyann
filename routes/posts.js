@@ -87,14 +87,13 @@ exports.createPostsByCourseId = function(req,res){
                 text : req.body.content
             }
             smtpTransport.sendMail(mailOptions, function(error, response){
-             if(error){
-                res.status(500);
-                res.end("error");
-             }else{
-                    // console.log("Message sent: " + response.message);
+              if(error){
+                res.json({message:'post created but there is no user to email'});
+              }
+              else{
                 res.json({message:'posted created and email sent'});
-                 }
-              });
+              }
+            });
         })
       }
       else{

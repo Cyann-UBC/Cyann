@@ -136,7 +136,8 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .set('Authorization', `Bearer ${user_tokens[4]}`)
         .expect(200)
         .expect((res) => {
-          expect(res.body).toInclude({ message:'posted created and email sent' });
+          // expect(res.body).toInclude({ message:'posted created and email sent' });
+          expect(res.body).toInclude({ message:'post created but there is no user to email' });
         })
         .end(done);
     });

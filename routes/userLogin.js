@@ -5,7 +5,6 @@ var request = require('request');
 
 
 exports.register = function(req,res){
-
     if( !req.body.email || !req.body.profileImg || !req.body.socialToken ) {
         var err = new Error();
         err.message = 'Either \'email\' or \'profileImg\' or \'socialToken\' param is missing';
