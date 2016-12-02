@@ -7,7 +7,7 @@ const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/f
 const {populateCourses, clearCourses, courses} = require('./../fixtures/fixtures-post.js'); // Note that we're using a different fixture
 
 describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
-  describe("[API ROUTE] GET /api/courses/:courseId/posts", () => {
+  describe("[GET] /api/courses/:courseId/posts", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -43,7 +43,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] GET /api/courses/:courseId/posts/:postId", () => {
+  describe("[GET] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -91,7 +91,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] POST /api/courses/:courseId/posts", () => {
+  describe("[POST] /api/courses/:courseId/posts", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -172,7 +172,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] PUT /api/courses/:courseId/posts/:postId", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -265,7 +265,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] DELETE /api/courses/:courseId/posts/:postId", () => {
+  describe("[DELETE] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);

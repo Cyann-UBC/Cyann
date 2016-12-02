@@ -7,7 +7,7 @@ const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/f
 const {populateCourses, clearCourses, courses} = require('./../fixtures/fixtures-course.js');
 
 describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
-  describe("[API ROUTE] GET /api/courses", () => {
+  describe("[GET] /api/courses", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -54,7 +54,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] GET /api/courses/:courseId", () => {
+  describe("[GET] /api/courses/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -102,7 +102,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] GET /api/courses/users/:courseId", () => {
+  describe("[GET] /api/courses/users/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -133,7 +133,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] POST /api/courses/", () => {
+  describe("[POST] /api/courses/", () => {
     before(populateUsers);
     before(clearCourses);
     after(clearUsers);
@@ -182,7 +182,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] PUT /api/courses/addUser/:courseId", () => {
+  describe("[PUT] /api/courses/addUser/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -224,7 +224,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });    
   });
 
-  describe("[API ROUTE] PUT /api/courses/removeUser/:courseId", () => {
+  describe("[PUT] /api/courses/removeUser/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -255,7 +255,7 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] PUT /api/courses/:courseId", () => {
+  describe("[PUT] /api/courses/:courseId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
