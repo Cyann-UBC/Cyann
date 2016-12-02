@@ -57,7 +57,7 @@ exports.createPostsByCourseId = function(req,res){
       return Users.findById(userId)
     })
     .then(function(user){
-      if(user.userType === 'Instructor'){
+      if(user.userType === 'instructor'){
         Courses.findById(req.params.courseId)
         .populate({ path: 'users', model: Users })
         .then(function(course){
@@ -80,10 +80,8 @@ exports.createPostsByCourseId = function(req,res){
             }
             smtpTransport.sendMail(mailOptions, function(error, response){
              if(error){
-                    console.log(error);
-                res.end("error");
+                res.json({message:'post created but there is no user to email'});
              }else{
-                    console.log("Message sent: " + response.message);
                 res.json({message:'posted created and email sent'});
                  }
               });

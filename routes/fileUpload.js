@@ -2,6 +2,8 @@
 var multer  = require('multer');
 var path = require('path')
 var fs = require('fs');
+var Courses = require("../models/course.js");
+var nodemailer = require('nodemailer');
 
 //Upload the file and send back a response
 exports.upload = function(req,res){
@@ -27,8 +29,36 @@ exports.upload = function(req,res){
               size: 277056 }
 	 */
 	res.json({message:'file uploaded'});
-};
-
+}else if(req.user.userType === "instructor"){
+	Courses.findById(req.params.courseId)
+	.populate({ path: 'users', model: Users })
+	.then(function(course){
+		for(var i = 0; i< course.users.length; i++){
+			emailList = emailList.concat(course.users[0].email)
+		}
+	})
+	.then(function(){
+	var smtpTransport = nodemailer.createTransport("SMTP",{
+			service: "hotmail",
+			auth: {
+					user: "howard12345678987654321@hotmail.com", //this needs to be changed
+					pass: '***!'
+			}
+	});
+	var mailOptions={
+					to : emailList,
+					subject : req.body.title,
+					text : req.body.content
+			}
+			smtpTransport.sendMail(mailOptions, function(error, response){
+			 if(error){
+					  res.json({message:'post created but there is no user to email'});
+			 }else{
+					res.json({message:'posted created and email sent'});
+					 }
+				});
+	})
+}
 //Get a list of files inside a specific course directory
 exports.showFiles = function(req,res){
 

@@ -4,6 +4,7 @@ var bodyParser = require("body-parser");                // Pull information from
 var path = require("path");
 // var multer  = require('multer')                      // Use multer for file uploads
 var expressJWT = require('express-jwt');
+var cors = require('cors');
 //var jwt = require('jsonwebtoken');
 //var request = require('request');
 
@@ -21,6 +22,7 @@ mongoose.Promise = global.Promise;
 // BEGIN ROUTING
 //----------------------------------------
 var app = express();
+app.use(cors());
 app.use(morgan('dev'));                                 // Log every request to the console{}
 app.use(bodyParser.json());                             // Parse application/json
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
