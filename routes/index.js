@@ -38,7 +38,6 @@ module.exports = function(app){
     app.post("/api/courses/:courseId/posts", posts.createPostsByCourseId );
     app.put("/api/courses/:courseId/posts/:postId", posts.updatePostsByCourseId );
     app.delete("/api/courses/:courseId/posts/:postId", posts.deleteByCourseId );
-    app.delete("/api/courses/:courseId/posts", posts.deleteAll );
 
     //---------------------------------------
     // COMMENTS ROUTES

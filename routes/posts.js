@@ -171,16 +171,3 @@ exports.deleteByCourseId = function(req,res){
     res.json({message:"You do not have permissions to edit the POST"})
   }
 }
-
-/*
-  parameter: courseId, postId
-  usage: delete a post within a specific course given the postId and courseId
-*/
-exports.deleteAll = function(req,res){
-  var promise = Courses.update({courseName:req.course.courseName}, { $set: { posts: [] }})
-  promise.then(function(result){
-    res.json({data:result})
-  }).catch(function(err){
-    res.send(err)
-  })
-};
