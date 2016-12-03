@@ -44,7 +44,7 @@ describe("<<<<<<<<<<<< HONOR API >>>>>>>>>>>>", () => {
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .expect(400)
         .expect((res) => {
-          expect(res.body).toInclude({ kind: 'ObjectId', message: 'Cast to ObjectId failed for value "12345" at path "_id"', name: 'CastError', path: '_id', value: '12345' });
+          expect(res.body).toInclude({ kind: 'ObjectId', name: 'CastError', path: '_id', value: '12345' });
         })
         .end(done);
     });
