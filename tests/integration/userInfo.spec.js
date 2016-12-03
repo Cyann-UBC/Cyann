@@ -188,4 +188,94 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .end(done);
     });
   });
+
+  describe("[GET] /api/users/getIds", () => {
+    before(populateUsers);
+    before(populateCourses);
+    after(clearUsers);
+    after(clearCourses);
+
+    var names_2_entry = [ users[0].name, users[3].name ];
+    var names_1_entry = [ users[0].name ];
+    var names_1_entry_not_array = users[0].name;
+    var names_invalid = [ users[0].name, 'BAD_NAME_THAT_IS_NOT_IN_DB'];
+
+    it('should return UNAUTHORIZED error (missing JWT)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .expect(401)
+        .expect((res) => {
+          expect(res.body).toInclude({
+            "message": "No authorization token was found",
+            "error": { "name": "UnauthorizedError", "message": "No authorization token was found", "code": "credentials_required", "status": 401, "inner": { "message": "No authorization token was found" }}
+          })
+        })
+        .end(done);
+    });
+    it('should return a list of userId converted from a list of usernames (userType == instructor)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[3]}`)
+        .send({ names: names_2_entry })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name }, { _id: users[3]._id, name: users[3].name } ]});
+        })
+        .end(done);
+    });
+    it('should return a list of userId converted from a list of usernames  (userType == student)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .send({ names: names_2_entry })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name }, { _id: users[3]._id, name: users[3].name } ]});
+        })
+        .end(done);
+    });
+    it('should return a list of userId converted from a list of usernames  (list.length == 1)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .send({ names: names_1_entry })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name } ]});
+        })
+        .end(done);
+    });
+    it('should return a list of userId converted from a list of usernames  (1x name, not in an Array)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .send({ names: names_1_entry_not_array })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name } ]});
+        })
+        .end(done);
+    });
+    it('should NOT return a list of userId converted from a list of usernames  ("names" param missing)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ error: { status: 400 }, message: 'MISSING_PARAM' });
+        })
+        .end(done);
+    });
+    it('should NOT return a list of userId if not all names has a matching userId', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .send({ names: names_invalid })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ error: { status: 400 }, message: 'INVALID_NAME(S)' });
+        })
+        .end(done);
+    });
+  });
 });
