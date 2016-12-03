@@ -4,12 +4,12 @@ var bodyParser = require("body-parser");                // Pull information from
 var path = require("path");
 // var multer  = require('multer')                      // Use multer for file uploads
 var expressJWT = require('express-jwt');
+var helmet = require('helmet')
 var cors = require('cors');
 
 //----------------------------------------
 // DATABASE
 //----------------------------------------
-var mongo = require('mongodb');
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
@@ -18,7 +18,8 @@ mongoose.Promise = global.Promise;
 //----------------------------------------
 var app = express();
 app.use(cors());
-// app.use(morgan('dev'));                              // Log every request to the console{}
+app.use(helmet());
+// app.use(morgan('dev'));                              // Log every request to the console{} (for dev only)
 app.use(bodyParser.json());                             // Parse application/json
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
 app.use(expressJWT({ secret: 'CPEN321_CYANN' }).unless({ path: ['/api/users/register'] })); //jwt verification middleware.
