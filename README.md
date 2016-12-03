@@ -2,11 +2,19 @@
 [![Build Status](https://travis-ci.org/Cyann-UBC/Cyann.svg?branch=master)](https://travis-ci.org/Cyann-UBC/Cyann)
 [![Coverage Status](https://coveralls.io/repos/github/Cyann-UBC/Cyann/badge.svg?branch=master)](https://coveralls.io/github/Cyann-UBC/Cyann?branch=master)
 
-NodeJS + MongoDB backend used for providing API endpoints for **Cyann** Mobile & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
+Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobile](https://github.com/Cyann-UBC/cyann_mobile) & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
 
-## Install
 
-Clone this repo to your local machine & install all the dependencies. (Make sure you have NodeJS, NPM & MongoDB installed on your local machine)
+
+## Getting Started
+
+### Prerequisites
+Before proceeding on, ensure that you have the installed on your local machine:
+- [Node.js & npm](https://docs.npmjs.com/getting-started/installing-node)
+- [MongoDB](https://docs.mongodb.com/v3.2/installation/)
+
+### Install dependencies
+Clone this repo to your local machine & install all the dependencies.
 ```
 $ git clone https://github.com/Howard-Zhou/Cyann.git
 $ cd ./Cyann
@@ -14,7 +22,7 @@ $ npm install
 ```
 
 ## Usage
-
+### Deploy
 To start mongoDB on your local machine (default url: localhost:27017)
 ``` 
 $ mongod
@@ -23,9 +31,7 @@ Open a new tab in your terminal & start the NodeJS server (default url: localhos
 ```
 $ npm start
 ```
-
-## Development
-
+### Development
 To run your server & make it automatically reload on any file changes:
 ``` 
 $ npm server-watch
@@ -34,9 +40,7 @@ To make your test suite automatically rerun on any file changes:
 ```
 $ npm test-watch
 ```
-
-## Testing
-
+### Testing
 To run the entire test suite:
 ``` 
 $ npm test
