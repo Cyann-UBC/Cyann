@@ -8,8 +8,10 @@ Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobi
 
 ### Prerequisites
 Before you proceed, ensure that you have the following installed on your local machine:
-- Node.js & npm *([How to install?](https://docs.npmjs.com/getting-started/installing-node))*
+- Node.js v6.9.1 LTS + npm *([How to install?](https://docs.npmjs.com/getting-started/installing-node))*
 - MongoDB *([How to install?](https://docs.mongodb.com/v3.2/installation/))*
+
+Having problems installing? Checkout our [wiki page](https://github.com/Cyann-UBC/Cyann/wiki)!
 
 ### Installing dependencies
 Clone the repository to your local machine & install all the dependencies
@@ -31,6 +33,16 @@ Now open a new tab in your terminal & run the Node.js server (default url: local
 $ npm start
 ```
 
+### Testing
+Run the entire test suite *(Note: Our tests are written using JavaScript ES6 syntax, hence you need Node.js v6.x.x or higher to get it to work)*
+``` 
+$ npm test
+```
+Generate test coverage report with [Istanbul](https://github.com/gotwarlost/istanbul)
+```
+$ npm run coverage
+```
+
 ### Development
 Run the server + automatically restart the server after file changes with [Nodemon](https://github.com/remy/nodemon)
 ``` 
@@ -39,16 +51,6 @@ $ npm server-watch
 Run the test suite + automatically rerun the entire test suite after file changes with [Nodemon](https://github.com/remy/nodemon)
 ```
 $ npm test-watch
-```
-
-### Testing
-Run the entire test suite
-``` 
-$ npm test
-```
-Generate test coverage report with [Istanbul](https://github.com/gotwarlost/istanbul)
-```
-$ npm run coverage
 ```
 
 ## API Documentation
