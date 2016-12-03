@@ -63,6 +63,7 @@ module.exports = function(app){
     // USER INFO ROUTES
     //---------------------------------------
     var userInfo = require('./userInfo');
+    app.get("/api/users/getIds", userInfo.convertNameToId)
     app.get("/api/users/my", userInfo.findById)
     app.get("/api/users/my/posts", userInfo.findPostById)
     app.get("/api/users/my/comments", userInfo.findCommentById)

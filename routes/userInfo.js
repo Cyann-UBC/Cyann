@@ -1,6 +1,7 @@
 var Courses = require("../models/course.js");
 var Users = require('../models/user.js')
 var mongoose = require('mongoose');
+var _ = require('lodash');
 
 //Convert a userId to a name
 exports.findById = function(req,res){
@@ -133,5 +134,34 @@ exports.getCourseData = function(req,res){
         .catch(function(err){
             res.status(400);
             res.json(err);
+        });
+}
+
+//find post by written by a specific user
+exports.convertNameToId = function(req,res){
+
+    if( !req.body.names || req.body.names === [] ){
+        res.status( 400 );
+        res.json({ error: { status: 400 }, message: 'MISSING_PARAM' });
+        return;
+    }
+
+    var namesArray = _.uniq(_.concat(req.body.names));
+    Users.find( {name: {$in: namesArray}} )
+        .then(function(result){
+            if( result.length != namesArray.length ){
+                res.status( 400 );
+                res.json({ error: { status: 400 }, message: 'INVALID_NAME(S)' });
+                return;
+            }
+            else{
+                var resultArray = result.map(function(thisUser){ return { _id: thisUser._id, name: thisUser.name }; });
+                res.status(200);
+                res.json({ data: resultArray });
+            }
+        })
+        .catch(function(err){
+            res.status(500);
+            res.send(err);
         });
 }
