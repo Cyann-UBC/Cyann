@@ -197,7 +197,8 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
 
     var names_2_entry = [ users[0].name, users[3].name ];
     var names_1_entry = [ users[0].name ];
-    var names_invalid = [ users[0].name, '000000000000000000000000'];
+    var names_1_entry_not_array = users[0].name;
+    var names_invalid = [ users[0].name, 'BAD_NAME_THAT_IS_NOT_IN_DB'];
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
@@ -238,6 +239,17 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .get(`/api/users/getIds`)
         .set('Authorization', `Bearer ${user_tokens[0]}`)
         .send({ names: names_1_entry })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name } ]});
+        })
+        .end(done);
+    });
+    it('should return a list of userId converted from a list of usernames  (1x name, not in an Array)', (done) => {
+      request(app)
+        .get(`/api/users/getIds`)
+        .set('Authorization', `Bearer ${user_tokens[0]}`)
+        .send({ names: names_1_entry_not_array })
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ data: [ { _id: users[0]._id, name: users[0].name } ]});
