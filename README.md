@@ -7,11 +7,11 @@ Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobi
 ## Getting Started
 
 ### Prerequisites
-Before proceeding on, ensure that you have the following installed on your local machine:
-- [Node.js & npm](https://docs.npmjs.com/getting-started/installing-node)
-- [MongoDB](https://docs.mongodb.com/v3.2/installation/)
+Before you proceed, ensure that you have the following installed on your local machine:
+- Node.js & npm *([How to install?](https://docs.npmjs.com/getting-started/installing-node))*
+- MongoDB *([How to install?](https://docs.mongodb.com/v3.2/installation/))*
 
-### Install dependencies
+### Installing dependencies
 Clone the repository to your local machine & install all the dependencies
 ```
 $ git clone https://github.com/Howard-Zhou/Cyann.git
@@ -19,7 +19,7 @@ $ cd ./Cyann
 $ npm install
 ```
 
-## Usage
+## Firing up our Server
 
 ### Deploy
 Before you run the server, start the MongoDB process and run it in the background (default url: localhost:27017)
@@ -32,11 +32,11 @@ $ npm start
 ```
 
 ### Development
-Run your server & make automatically restart server on any file changes
+Run the server + automatically restart the server after file changes with [Nodemon](https://github.com/remy/nodemon)
 ``` 
 $ npm server-watch
 ```
-Make your test suite automatically rerun all test on any file changes
+Run the test suite + automatically rerun the entire test suite after file changes with [Nodemon](https://github.com/remy/nodemon)
 ```
 $ npm test-watch
 ```
