@@ -4,17 +4,15 @@
 
 Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobile](https://github.com/Cyann-UBC/cyann_mobile) & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
 
-
-
 ## Getting Started
 
 ### Prerequisites
-Before proceeding on, ensure that you have the installed on your local machine:
+Before proceeding on, ensure that you have the following installed on your local machine:
 - [Node.js & npm](https://docs.npmjs.com/getting-started/installing-node)
 - [MongoDB](https://docs.mongodb.com/v3.2/installation/)
 
 ### Install dependencies
-Clone this repo to your local machine & install all the dependencies.
+Clone the repository to your local machine & install all the dependencies
 ```
 $ git clone https://github.com/Howard-Zhou/Cyann.git
 $ cd ./Cyann
@@ -22,30 +20,33 @@ $ npm install
 ```
 
 ## Usage
+
 ### Deploy
-To start mongoDB on your local machine (default url: localhost:27017)
+Before you run the server, start the MongoDB process and run it in the background (default url: localhost:27017)
 ``` 
 $ mongod
 ```
-Open a new tab in your terminal & start the NodeJS server (default url: localhost:8080)
+Now open a new tab in your terminal & run the Node.js server (default url: localhost:8080)
 ```
 $ npm start
 ```
+
 ### Development
-To run your server & make it automatically reload on any file changes:
+Run your server & make automatically restart server on any file changes
 ``` 
 $ npm server-watch
 ```
-To make your test suite automatically rerun on any file changes:
+Make your test suite automatically rerun all test on any file changes
 ```
 $ npm test-watch
 ```
+
 ### Testing
-To run the entire test suite:
+Run the entire test suite
 ``` 
 $ npm test
 ```
-To generate the coverage report with [Istanbul](https://github.com/gotwarlost/istanbul), you can view the report in your browser by opening the **Cyann/coverage/lcov-report/index.html** file that's being generated:
+Generate test coverage report with [Istanbul](https://github.com/gotwarlost/istanbul)
 ```
 $ npm run coverage
 ```
