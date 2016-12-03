@@ -109,23 +109,14 @@ exports.getCourseData = function(req,res){
             'postCount': { $size: '$posts' },
             'userCount': { $size: '$users' }
         })
-        .exec(function(err, result){
-            if (err) {
-                throw new Error();
-            }
-          
-            return result;
-        })
+        .exec()
         // Due to how mongoose is designed, we have to make a 2nd query in order to POPULATE after an AGGREGATE
         .then(function(result2){
-            Users.populate(result2, {path: "TAs instructor", select: "name", model: Users}, function(err, result3){
-                if (err) {
-                    throw new Error();
-                }
-
-                res.status(200);
-                res.json(result3);
-            });
+            return Users.populate(result2, {path: "TAs instructor", select: "name", model: Users})
+        })
+        .then(function(result3){
+            res.status(200);
+            res.json(result3);
         })
         .catch(function(err){
             res.status(400);

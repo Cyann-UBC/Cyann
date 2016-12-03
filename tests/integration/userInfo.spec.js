@@ -176,7 +176,7 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
-    it('should return user\'s list of registered courses (user has not joined a course as a student)', (done) => {
+    it('should return user\'s list of registered courses (user has NOT joined a course as a student)', (done) => {
       request(app)
         .get(`/api/users/my/courseData`)
         .set('Authorization', `Bearer ${user_tokens[3]}`)
