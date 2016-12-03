@@ -1,7 +1,19 @@
 language: node_js
+
 node_js:
   - "6"
-  - "node"
-services: mongodb
+
+sudo: false
+addons:
+  apt:
+    sources:
+      - mongodb-upstart
+      - mongodb-3.0-precise
+    packages:
+      - mongodb-org-server
+      - mongodb-org-shell
+
+before_script:
+  - sleep 15
 script: npm run coverage
 after_success: 'npm run coveralls'
