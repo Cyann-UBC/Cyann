@@ -135,13 +135,17 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
 
   describe("[POST] /api/courses/", () => {
     before(populateUsers);
-    before(clearCourses);
+    beforeEach(clearCourses);
     after(clearUsers);
     after(clearCourses);
 
     var courseName = 'TEST_COURSE_C',
-        instructor = ['000000000000000000000004'],
-        TAs = ['000000000000000000000003'];
+        instructor = ['400000000000000000000000'],
+        TAs = ['300000000000000000000000'];
+
+    var instructor_conflict = ['400000000000000000000000'],
+        TAs_conflict = ['400000000000000000000000', '300000000000000000000000'],
+        moreTAs = ['300000000000000000000000', '200000000000000000000000', '100000000000000000000000'];
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
@@ -169,7 +173,19 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .end(done);
     });
 
-    it('should allow an instructor to create a new course', (done) => {
+    it('should allow an instructor to create a new course (No TA, 1x Instructor)', (done) => {
+      request(app)
+        .post('/api/courses/')
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ courseName, instructor })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: { TAs: [], courseName, instructor, posts: [], users: [] }, message: 'Course created!' })
+        })
+        .end(done);
+    });
+
+    it('should allow an instructor to create a new course (1x TA, 1x Instructor)', (done) => {
       request(app)
         .post('/api/courses/')
         .set('Authorization', `Bearer ${user_tokens[4]}`)
@@ -177,6 +193,54 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .expect(200)
         .expect((res) => {
           expect(res.body).toInclude({ data: { TAs, courseName, instructor, posts: [], users: [] }, message: 'Course created!' })
+        })
+        .end(done);
+    });
+
+    it('should allow an instructor to create a new course (3x TA, 1x Instructor)', (done) => {
+      request(app)
+        .post('/api/courses/')
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ courseName, instructor, TAs: moreTAs })
+        .expect(200)
+        .expect((res) => {
+          expect(res.body).toInclude({ data: { TAs: moreTAs, courseName, instructor, posts: [], users: [] }, message: 'Course created!' })
+        })
+        .end(done);
+    });
+
+    it('should NOT allow a user to be an instructor & TA at the same time', (done) => {
+      request(app)
+        .post('/api/courses/')
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ courseName, instructor: instructor_conflict, TAs: TAs_conflict })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ message: 'PARAM_CONFLICT', status: 400 })
+        })
+        .end(done);
+    });
+
+    it('should NOT create a course ("instructor" param missing)', (done) => {
+      request(app)
+        .post('/api/courses/')
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ courseName })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ message: 'MISSING_PARAM', status: 400 })
+        })
+        .end(done);
+    });
+
+    it('should NOT create a course ("courseName" param missing)', (done) => {
+      request(app)
+        .post('/api/courses/')
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ instructor })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ message: 'MISSING_PARAM', status: 400 })
         })
         .end(done);
     });
@@ -261,8 +325,11 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
     after(clearUsers);
     after(clearCourses);
 
-    var instructor = ['000000000000000000000005'],
-        TAs = ['000000000000000000000002','000000000000000000000003'];
+    var instructor = ['400000000000000000000000'],
+        TAs = ['200000000000000000000000','300000000000000000000000'];
+
+    var instructor_conflict = ['400000000000000000000000'],
+        TAs_conflict = ['400000000000000000000000', '300000000000000000000000'];
 
     it('should return UNAUTHORIZED error (missing JWT)', (done) => {
       request(app)
@@ -296,7 +363,19 @@ describe("<<<<<<<<<<<< COURSES API >>>>>>>>>>>>", () => {
         .send({ instructor, TAs })
         .expect(200)
         .expect((res) => {
-          expect(res.body).toInclude({ data: { TAs: [ '000000000000000000000002', '000000000000000000000003' ], __v: 1, _id: '000000000000000000000002', courseName: 'TEST_COURSE_B', instructor: [ '000000000000000000000005' ], posts: [], users: [] } })
+          expect(res.body).toInclude({ data: { TAs, __v: 1, _id: courses[1]._id, courseName: courses[1].courseName, instructor, posts: [], users: [] } })
+        })
+        .end(done);
+    });
+
+    it('should NOT allow a user to be an instructor & TA at the same time', (done) => {
+      request(app)
+        .put(`/api/courses/${courses[1]._id}`)
+        .set('Authorization', `Bearer ${user_tokens[4]}`)
+        .send({ instructor: instructor_conflict, TAs: TAs_conflict })
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toInclude({ message: 'PARAM_CONFLICT', status: 400 })
         })
         .end(done);
     });
