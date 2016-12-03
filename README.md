@@ -11,15 +11,26 @@ $ cd ./Cyann
 $ npm install
 ```
 
-## Development/Usage
+## Usage
 
 To start mongoDB on your local machine (default url: localhost:27017)
 ``` 
 $ mongod
 ```
-Open a new tab in your terminal & start the NodeJS server (default url: localhost:3000)
+Open a new tab in your terminal & start the NodeJS server (default url: localhost:8080)
 ```
-$ nodemon server.js
+$ npm start
+```
+
+## Development
+
+To run your server & make it automatically reload on any file changes:
+``` 
+$ npm server-watch
+```
+To make your test suite automatically rerun on any file changes:
+```
+$ npm test-watch
 ```
 
 ## Testing
