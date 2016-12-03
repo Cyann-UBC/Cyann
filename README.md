@@ -1,4 +1,5 @@
 # Cyann (Backend)
+[![Travis](https://img.shields.io/travis/rust-lang/rust.svg)](https://travis-ci.org/Cyann-UBC/Cyann.svg?branch=master) [![Coverage Status](https://coveralls.io/repos/github/Cyann-UBC/Cyann/badge.svg?branch=master)](https://coveralls.io/github/Cyann-UBC/Cyann?branch=master)
 
 NodeJS + MongoDB backend used for providing API endpoints for **Cyann** Mobile & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
 
