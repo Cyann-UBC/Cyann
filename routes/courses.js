@@ -1,6 +1,7 @@
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
 var fs = require('fs');
+var _ = require('lodash');
 
 //Find all post
 exports.findAll = function(req,res){
@@ -63,6 +64,21 @@ exports.create = function(req,res){
         res.json(err);
         return;
     }
+
+    if( (!req.body.courseName || req.body.courseName == "" ) || 
+        ( !req.body.instructor || req.body.instructor == "" ) ){
+        res.status( 400 );
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
+    }
+
+    var temp = _.concat(req.body.instructor, req.body.TAs);
+    if( _.uniq(temp).length != temp.length ){
+        res.status( 400 );
+        res.json({ message: 'PARAM_CONFLICT', status: 400 });
+        return;
+    }
+
     var newCourse = { courseName: req.body.courseName,
                      instructor: req.body.instructor,
                      TAs: req.body.TAs };
@@ -82,10 +98,6 @@ exports.create = function(req,res){
             res.send(err);
         });
 };
-// Helper Method for FILTER()
-function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-}
 
 exports.updateById = function(req,res){
 
@@ -95,6 +107,13 @@ exports.updateById = function(req,res){
         err.status = 400;
         res.status(400);
         res.json(err);
+        return;
+    }
+    
+    var temp = _.concat(req.body.instructor, req.body.TAs);
+    if( _.uniq(temp).length != temp.length ){
+        res.status( 400 );
+        res.json({ message: 'PARAM_CONFLICT', status: 400 });
         return;
     }
 
