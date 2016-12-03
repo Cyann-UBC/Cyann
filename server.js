@@ -5,11 +5,6 @@ var path = require("path");
 // var multer  = require('multer')                      // Use multer for file uploads
 var expressJWT = require('express-jwt');
 var cors = require('cors');
-//var jwt = require('jsonwebtoken');
-//var request = require('request');
-
-
-
 
 //----------------------------------------
 // DATABASE

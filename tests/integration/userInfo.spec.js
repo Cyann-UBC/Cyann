@@ -7,7 +7,7 @@ const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/f
 const {populateCourses, clearCourses, courses} = require('./../fixtures/fixtures-comment.js'); // Note that we're using a different fixture
 
 describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
-  describe("[API ROUTE] GET /api/users/my", () => {
+  describe("[GET] /api/users/my", () => {
     before(populateUsers);
     after(clearUsers);
 
@@ -50,7 +50,7 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .end(done);
     });
   });
-  describe("[API ROUTE] GET /api/users/my/posts", () => {
+  describe("[GET] /api/users/my/posts", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -96,7 +96,7 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .end(done);
     });
   });
-  describe("[API ROUTE] GET /api/users/my/comments", () => {
+  describe("[GET] /api/users/my/comments", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -142,7 +142,7 @@ describe("<<<<<<<<<<<< USERINFO API >>>>>>>>>>>>", () => {
         .end(done);
     });
   });
-  describe("[API ROUTE] GET /api/users/my/courseData", () => {
+  describe("[GET] /api/users/my/courseData", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);

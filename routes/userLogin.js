@@ -35,7 +35,6 @@ exports.register = function(req,res){
                 }
             })
             .then(function(user){
-              // console.log(user)
                 var token = jwt.sign({
                                     facebookId: profile.id,
                                     userId: user._id,
@@ -69,7 +68,6 @@ function validateWithProvider(socialToken) {
             },
             function (error, response, body) {
                 if (!error && response.statusCode == 200) {
-                  console.log(body)
                     resolve(JSON.parse(body));
                 } else {
                     reject(error);

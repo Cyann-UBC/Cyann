@@ -1,6 +1,7 @@
 var Courses = require("../models/course.js");
 var Users = require("../models/user.js");
 var fs = require('fs');
+var _ = require('lodash');
 
 //Find all post
 exports.findAll = function(req,res){
@@ -63,12 +64,32 @@ exports.create = function(req,res){
         res.json(err);
         return;
     }
+
+    if( (!req.body.courseName || req.body.courseName == "" ) || 
+        ( !req.body.instructor || req.body.instructor == "" ) ){
+        res.status( 400 );
+        res.json({ message: 'MISSING_PARAM', status: 400 });
+        return;
+    }
+
+    var temp = _.concat(req.body.instructor, req.body.TAs);
+    if( _.uniq(temp).length != temp.length ){
+        res.status( 400 );
+        res.json({ message: 'PARAM_CONFLICT', status: 400 });
+        return;
+    }
+
     var newCourse = { courseName: req.body.courseName,
                      instructor: req.body.instructor,
-                     TAs: req.body.TAs.split(" ").filter(onlyUnique) };
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName)
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/readings')
-    fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/assignments')
+                     TAs: req.body.TAs };
+
+    // Attempt to create folders for uploading
+    try{
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName)
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/readings')
+        fs.mkdirSync(__dirname+'/../uploads/'+req.body.courseName+'/assignments')
+    }catch(err){}
+
     Courses.create(newCourse)
         .then(function (result){
             res.json({ message: "Course created!", data: result });
@@ -77,10 +98,6 @@ exports.create = function(req,res){
             res.send(err);
         });
 };
-// Helper Method for FILTER()
-function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
-}
 
 exports.updateById = function(req,res){
 
@@ -92,6 +109,13 @@ exports.updateById = function(req,res){
         res.json(err);
         return;
     }
+    
+    var temp = _.concat(req.body.instructor, req.body.TAs);
+    if( _.uniq(temp).length != temp.length ){
+        res.status( 400 );
+        res.json({ message: 'PARAM_CONFLICT', status: 400 });
+        return;
+    }
 
     var courseId = req.params.courseId;
     Courses.findOne({'_id': courseId})
@@ -99,13 +123,15 @@ exports.updateById = function(req,res){
             if (req.body.TAs != null)
                 for (var i = 0; i < req.body.TAs.length; i++)
                     result.TAs.push(req.body.TAs[i]);
+
             if (req.body.instructor != null)
                 for (var i = 0; i < req.body.instructor.length; i++)
                     result.instructor.push(req.body.instructor[i]);
+
             return result.save();
         })
         .then(function (result){
-            res.json({ message: 'Updated course #'+courseName+'', data: result });
+            res.json({ data: result });
         }).catch(function(err){
             res.send(err);
         });

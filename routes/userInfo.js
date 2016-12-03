@@ -2,17 +2,6 @@ var Courses = require("../models/course.js");
 var Users = require('../models/user.js')
 var mongoose = require('mongoose');
 
-//find all user
-exports.findAll = function(req,res){
-    Users.find()
-        .select('-__v')
-        .then(function (result){
-            res.json({ message: 'Retrieved all user!', data: result });
-        }).catch(function(err){
-            res.send(err);
-        });
-}
-
 //Convert a userId to a name
 exports.findById = function(req,res){
     Users.findById({"_id": req.user.userId})

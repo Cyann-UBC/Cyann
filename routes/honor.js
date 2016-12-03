@@ -15,6 +15,7 @@ exports.getHonorPointsByUserId = function(req, res) {
 	promise.then(function (result){
      	res.json({ userName: result.name, honorPoints: result.honor });
  	}).catch(function(err){
+      res.status(400);
      	res.send(err);
   });
 }

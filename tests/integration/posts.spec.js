@@ -7,7 +7,7 @@ const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/f
 const {populateCourses, clearCourses, courses} = require('./../fixtures/fixtures-post.js'); // Note that we're using a different fixture
 
 describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
-  describe("[API ROUTE] GET /api/courses/:courseId/posts", () => {
+  describe("[GET] /api/courses/:courseId/posts", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -43,7 +43,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] GET /api/courses/:courseId/posts/:postId", () => {
+  describe("[GET] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -91,7 +91,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] POST /api/courses/:courseId/posts", () => {
+  describe("[POST] /api/courses/:courseId/posts", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -136,7 +136,8 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
         .set('Authorization', `Bearer ${user_tokens[4]}`)
         .expect(200)
         .expect((res) => {
-          expect(res.body).toInclude({ message:'posted created and email sent' });
+          // expect(res.body).toInclude({ message:'posted created and email sent' });
+          expect(res.body).toInclude({ message:'post created but there is no user to email' });
         })
         .end(done);
     });
@@ -172,7 +173,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] PUT /api/courses/:courseId/posts/:postId", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -265,7 +266,7 @@ describe("<<<<<<<<<<<< POSTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("[API ROUTE] DELETE /api/courses/:courseId/posts/:postId", () => {
+  describe("[DELETE] /api/courses/:courseId/posts/:postId", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);

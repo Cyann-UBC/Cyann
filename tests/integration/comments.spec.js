@@ -7,7 +7,7 @@ const {populateUsers, clearUsers, users, user_tokens} = require('./../fixtures/f
 const {populateCourses, clearCourses, courses} = require('./../fixtures/fixtures-comment.js'); // Note that we're using a different fixture
 
 describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
-  describe("GET /api/courses/:courseId/posts/:postId/comments", () => {
+  describe("[GET] /api/courses/:courseId/posts/:postId/comments", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -44,7 +44,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("GET /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
+  describe("[GET] /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -92,7 +92,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("POST /api/courses/:courseId/posts/:postId/comments", () => {
+  describe("[POST] /api/courses/:courseId/posts/:postId/comments", () => {
     before(populateUsers);
     before(populateCourses);
     after(clearUsers);
@@ -144,7 +144,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
   
-  describe("PUT /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
@@ -227,7 +227,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("DELETE /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
+  describe("[DELETE] /api/courses/:courseId/posts/:postId/comments/:commentId", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
@@ -295,7 +295,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("PUT /api/courses/:courseId/posts/:postId/comments/:commentId/setAsAnswer", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId/comments/:commentId/setAsAnswer", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
@@ -371,7 +371,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
   
-  describe("PUT /api/courses/:courseId/posts/:postId/comments/:commentId/unsetAsAnswer", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId/comments/:commentId/unsetAsAnswer", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
@@ -445,7 +445,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
 
-  describe("PUT /api/courses/:courseId/posts/:postId/comments/:commentId/upvote", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId/comments/:commentId/upvote", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
@@ -528,7 +528,7 @@ describe("<<<<<<<<<<<< COMMENTS API >>>>>>>>>>>>", () => {
     });
   });
   
-  describe("PUT /api/courses/:courseId/posts/:postId/comments/:commentId/resetVote", () => {
+  describe("[PUT] /api/courses/:courseId/posts/:postId/comments/:commentId/resetVote", () => {
     before(populateUsers);
     beforeEach(populateCourses);
     after(clearUsers);
