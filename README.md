@@ -45,16 +45,6 @@ Generate test coverage report with [Istanbul](https://github.com/gotwarlost/ista
 $ npm run coverage
 ```
 
-### Development
-Run the server + automatically restart the server after file changes with [Nodemon](https://github.com/remy/nodemon)
-``` 
-$ npm server-watch
-```
-Run the test suite + automatically rerun the entire test suite after file changes with [Nodemon](https://github.com/remy/nodemon)
-```
-$ npm test-watch
-```
-
 ## API Documentation
 Please refer to the API documentation located in [Cyann/doc](https://github.com/Cyann-UBC/Cyann/tree/master/docs) for details.
 
