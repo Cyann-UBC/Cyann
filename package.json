@@ -12,8 +12,7 @@
     "coveralls": "cat ./coverage/lcov.info | node node_modules/.bin/coveralls",
     "production-start": "sudo forever start server_production",
     "production-check": "sudo forever list",
-    "production-stop": "sudo forever list | grep \"server_production.js\" | grep -o '[0-9]' | { read pid; sudo forever
-stop $pid; }"
+    "production-stop": "sudo forever list | grep \"server_production.js\" | grep -o '[0-9]' | { read pid; sudo forever stop $pid; }"
   },
   "author": "CPEN321 Cyann Group",
   "license": "MIT",
