@@ -5,6 +5,13 @@ var path = require("path");
 var expressJWT = require('express-jwt');
 var helmet = require('helmet')
 var cors = require('cors');
+var https = require('https');
+var fs = require('fs');
+var options = {
+    ca:fs.readFileSync(__dirname+'/cyann_tech.ca-bundle'),
+    key: fs.readFileSync(__dirname+'/cyann_tech.key'),
+    cert: fs.readFileSync(__dirname+'/cyann_tech.crt')
+};
 console.log(__dirname)
 //----------------------------------------
 // DATABASE
@@ -19,9 +26,6 @@ var app = express();
 app.use(cors());
 app.use(express.static(__dirname));
 app.use(helmet());
-
-// var morgan = require('morgan');                      // Log requests to the console (express4)
-// app.use(morgan('dev'));                              // Log every request to the console{}
 
 app.use(bodyParser.json());                             // Parse application/json
 app.use(bodyParser.urlencoded({"extended" : false}));   // DON'T parse application/x-www-form-urlencoded
@@ -39,9 +43,22 @@ app.use(function(err, req, res, next) {
 });
 
 //----------------------------------------
-// START SERVER @ PORT 8080
+// START SERVER @ PORT 443 (HTTPS)
 //----------------------------------------
-app.listen(8080);
-console.log("Listening to PORT 8080");
+https.createServer( options, function(req,res)
+{
+    app.handle( req, res );
+}).listen( 443 );
+console.log("Listening to PORT 443");
+
+//----------------------------------------
+// SET PORT 80 TO REDIRECT TO PORT 443
+//----------------------------------------
+var http = require('http');
+http.createServer(function (req, res) {
+    res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+    res.end();
+}).listen(80);
+console.log("All requests sent to PORT 80 will be redirected to PORT 443 instead");
 
 module.exports.app = app;
