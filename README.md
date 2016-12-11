@@ -1,5 +1,6 @@
 # Cyann (Backend)
 [![Build Status](https://travis-ci.org/Cyann-UBC/Cyann.svg?branch=master)](https://travis-ci.org/Cyann-UBC/Cyann)
+[![Dependencies Status](https://david-dm.org/Cyann-UBC/Cyann.svg)](https://david-dm.org/Cyann-UBC/Cyann)
 [![Coverage Status](https://coveralls.io/repos/github/Cyann-UBC/Cyann/badge.svg?branch=master)](https://coveralls.io/github/Cyann-UBC/Cyann?branch=master)
 
 Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobile](https://github.com/Cyann-UBC/cyann_mobile) & [Web](https://github.com/Howard-Zhou/cyann_front) Application.
