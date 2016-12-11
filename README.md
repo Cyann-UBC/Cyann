@@ -10,8 +10,10 @@ Node.js + MongoDB server used to provide backend API service for **Cyann** [Mobi
 
 ### Prerequisites
 Before you proceed, ensure that you have the following installed on your local machine:
-- Node.js v6.9.1 LTS + npm *([How to install?](https://docs.npmjs.com/getting-started/installing-node))*
+- Node.js v6.9.1 LTS *([How to install?](https://nodejs.org/en/download/))*
 - MongoDB *([How to install?](https://docs.mongodb.com/v3.2/installation/))*
+- npm *([How to install?](https://docs.npmjs.com/getting-started/installing-node))*
+- Yarn (optional, alternative to npm) *([How to install?](https://yarnpkg.com/en/docs/install#mac-tab))*
 
 Having problems installing? Checkout our [wiki page](https://github.com/Cyann-UBC/Cyann/wiki)!
 
@@ -22,12 +24,17 @@ $ git clone https://github.com/Howard-Zhou/Cyann.git
 $ cd ./Cyann
 $ npm install
 ```
-
+If you have **Yarn** installed, run the following commands instead
+```
+$ git clone https://github.com/Howard-Zhou/Cyann.git
+$ cd ./Cyann
+$ yarn
+```
 ## Firing up our Server
 
 ### Deploy
 Before you run the server, start the MongoDB process and run it in the background (default url: localhost:27017)
-``` 
+```
 $ mongod
 ```
 Now open a new tab in your terminal & run the Node.js server (default url: localhost:8080)
@@ -37,8 +44,8 @@ $ npm start
 
 ### Testing
 Run the entire test suite *(Note: Our tests are written using JavaScript ES6 syntax, hence you need Node.js v6.x.x or higher to get it to work)*
-``` 
-$ npm test
+```
+$ npm run test
 ```
 Generate test coverage report with [Istanbul](https://github.com/gotwarlost/istanbul)
 ```
