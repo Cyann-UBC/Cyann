@@ -1,5 +1,5 @@
 # Cyann (Backend)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/hyperium/hyper/master/LICENSE)
+[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/Cyann-UBC/Cyann.svg?branch=master)](https://travis-ci.org/Cyann-UBC/Cyann)
 [![dependencies Status](https://david-dm.org/Cyann-UBC/Cyann/master/status.svg)](https://david-dm.org/Cyann-UBC/Cyann/master)
 [![devDependencies Status](https://david-dm.org/Cyann-UBC/Cyann/master/dev-status.svg)](https://david-dm.org/Cyann-UBC/Cyann/master?type=dev)
